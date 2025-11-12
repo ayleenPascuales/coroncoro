@@ -1,7 +1,7 @@
 package DAO;
 
 import com.google.firebase.database.*;
-import Model.Cuenta_Anfitrion;
+import Model.Cuenta_anfitrion;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -14,7 +14,7 @@ public class AnfitrionDAO {
     }
     
     // Registrar anfitrión
-    public CompletableFuture<Void> registrarAnfitrion(Cuenta_Anfitrion anfitrion) {
+    public CompletableFuture<Void> registrarAnfitrion(Cuenta_anfitrion anfitrion) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         
         anfitrionesRef.child(anfitrion.getDocumento()).setValue(anfitrion, (error, ref) -> {
@@ -29,13 +29,13 @@ public class AnfitrionDAO {
     }
     
     // Obtener anfitrión por documento
-    public CompletableFuture<Cuenta_Anfitrion> obtenerAnfitrion(String documento) {
-        CompletableFuture<Cuenta_Anfitrion> future = new CompletableFuture<>();
+    public CompletableFuture<Cuenta_anfitrion> obtenerAnfitrion(String documento) {
+        CompletableFuture<Cuenta_anfitrion> future = new CompletableFuture<>();
         
         anfitrionesRef.child(documento).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Cuenta_Anfitrion anfitrion = dataSnapshot.getValue(Cuenta_Anfitrion.class);
+                Cuenta_anfitrion anfitrion = dataSnapshot.getValue(Cuenta_anfitrion.class);
                 future.complete(anfitrion);
             }
             
@@ -49,15 +49,15 @@ public class AnfitrionDAO {
     }
     
     // Listar anfitriones
-    public CompletableFuture<Map<String, Cuenta_Anfitrion>> listarAnfitriones() {
-        CompletableFuture<Map<String, Cuenta_Anfitrion>> future = new CompletableFuture<>();
+    public CompletableFuture<Map<String, Cuenta_anfitrion>> listarAnfitriones() {
+        CompletableFuture<Map<String, Cuenta_anfitrion>> future = new CompletableFuture<>();
         
         anfitrionesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Cuenta_Anfitrion> anfitriones = new HashMap<>();
+                Map<String, Cuenta_anfitrion> anfitriones = new HashMap<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Cuenta_Anfitrion anfitrion = snapshot.getValue(Cuenta_Anfitrion.class);
+                    Cuenta_anfitrion anfitrion = snapshot.getValue(Cuenta_anfitrion.class);
                     anfitriones.put(snapshot.getKey(), anfitrion);
                 }
                 future.complete(anfitriones);
@@ -73,7 +73,7 @@ public class AnfitrionDAO {
     }
     
     // Actualizar anfitrión
-    public CompletableFuture<Void> actualizarAnfitrion(String documento, Cuenta_Anfitrion anfitrion) {
+    public CompletableFuture<Void> actualizarAnfitrion(String documento, Cuenta_anfitrion anfitrion) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         
         anfitrionesRef.child(documento).setValue(anfitrion, (error, ref) -> {
