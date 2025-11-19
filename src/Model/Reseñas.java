@@ -1,25 +1,25 @@
 package Model;
 
 public class Reseñas {
-
-    private Reseñas reseña;
+    
+    private String id_reseña;
     private Cuenta_cliente cliente;
     private String calificacion;
     private String critica;
-    
-    public Reseñas(Reseñas reseña, Cuenta_cliente cliente, String calificacion, String critica) {
-        this.reseña = reseña;
+
+    public Reseñas(String id_reseña, Cuenta_cliente cliente, String calificacion, String critica) {
+        this.id_reseña = id_reseña;
         this.cliente = cliente;
         this.calificacion = calificacion;
         this.critica = critica;
     }
 
-    public Reseñas getReseña() {
-        return reseña;
+    public String getId_reseña() {
+        return id_reseña;
     }
 
-    public void setReseña(Reseñas reseña) {
-        this.reseña = reseña;
+    public void setId_reseña(String id_reseña) {
+        this.id_reseña = id_reseña;
     }
 
     public Cuenta_cliente getCliente() {
@@ -44,5 +44,7 @@ public class Reseñas {
 
     public void setCritica(String critica) {
         this.critica = critica;
-    }  
+    }
+
+         
 }

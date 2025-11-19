@@ -1,0 +1,16 @@
+[
+  {
+    "idReseña": "R-001",
+    "idReseñaPadre": null,
+    "cliente": { "nombre": "Laura", "apellido": "Martínez" },
+    "calificacion": "5",
+    "critica": "La casa estuvo increíble, muy cómoda."
+  },
+  {
+    "idReseña": "R-002",
+    "idReseñaPadre": "R-001",
+    "cliente": { "nombre": "Admin", "apellido": "Salgado" },
+    "calificacion": "5",
+    "critica": "Gracias Laura, nos alegra que lo hayas disfrutado."
+  }
+]

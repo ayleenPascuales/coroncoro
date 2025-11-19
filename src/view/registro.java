@@ -3,11 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
+import java.awt.Image;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.json.*;
@@ -18,6 +21,8 @@ import org.json.*;
 public class registro extends javax.swing.JFrame {
     private Map<String, String> paises = new HashMap<>();
     private List<String> rutasMultiplesArchivos = new ArrayList<>();
+    private File[] fotosSeleccionadas;
+
     /**
      * Creates new form registro
      */
@@ -147,6 +152,32 @@ public class registro extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error al cargar ciudades: " + e.getMessage());
         }
     }
+    
+    public void guardarFotos() {
+        if (fotosSeleccionadas == null || fotosSeleccionadas.length == 0) {
+            JOptionPane.showMessageDialog(this, "No hay fotos para guardar.");
+            return;
+        }
+
+        File carpeta = new File("Fotografias");
+
+        if (!carpeta.exists()) {
+            carpeta.mkdir();
+        }
+
+        for (File foto : fotosSeleccionadas) {
+            try {
+                File destino = new File(carpeta, foto.getName());
+                Files.copy(foto.toPath(), destino.toPath(),
+                        StandardCopyOption.REPLACE_EXISTING);
+
+            } catch (Exception e) {
+                System.out.println("Error guardando foto: " + e);
+            }
+        }
+
+        JOptionPane.showMessageDialog(this, "Fotos guardadas correctamente.");
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -209,6 +240,24 @@ public class registro extends javax.swing.JFrame {
         jLabel33 = new javax.swing.JLabel();
         cbPais_vivienda = new javax.swing.JComboBox<>();
         cbCiudad_vivienda = new javax.swing.JComboBox<>();
+        jLabel28 = new javax.swing.JLabel();
+        cbPais_vivienda1 = new javax.swing.JComboBox<>();
+        jLabel22 = new javax.swing.JLabel();
+        cbCiudad_vivienda1 = new javax.swing.JComboBox<>();
+        jLabel23 = new javax.swing.JLabel();
+        txtBarrio1 = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
+        txtDireccion_vivienda1 = new javax.swing.JTextField();
+        jLabel52 = new javax.swing.JLabel();
+        jsCapacidad1 = new com.toedter.components.JSpinField();
+        jLabel53 = new javax.swing.JLabel();
+        jsHabitaciones1 = new com.toedter.components.JSpinField();
+        jLabel54 = new javax.swing.JLabel();
+        jsBaños1 = new com.toedter.components.JSpinField();
+        jLabel55 = new javax.swing.JLabel();
+        cbTipo_vivienda1 = new javax.swing.JComboBox<>();
+        jLabel56 = new javax.swing.JLabel();
+        txtPrecio1 = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jLabel34 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -241,6 +290,28 @@ public class registro extends javax.swing.JFrame {
         cbAgua = new javax.swing.JComboBox<>();
         cb_movilidad = new javax.swing.JComboBox<>();
         cb_vigilancia = new javax.swing.JComboBox<>();
+        jLabel57 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        taDescripcion1 = new javax.swing.JTextArea();
+        Fotos1 = new javax.swing.JLabel();
+        jLabel58 = new javax.swing.JLabel();
+        lbVista_Previa1 = new javax.swing.JLabel();
+        jLabel59 = new javax.swing.JLabel();
+        cbPiscina1 = new javax.swing.JComboBox<>();
+        jLabel60 = new javax.swing.JLabel();
+        cbParrilla1 = new javax.swing.JComboBox<>();
+        jLabel61 = new javax.swing.JLabel();
+        cbMascotas1 = new javax.swing.JComboBox<>();
+        jLabel62 = new javax.swing.JLabel();
+        jLabel63 = new javax.swing.JLabel();
+        cbParques1 = new javax.swing.JComboBox<>();
+        jLabel64 = new javax.swing.JLabel();
+        cbBalcon1 = new javax.swing.JComboBox<>();
+        cbAgua1 = new javax.swing.JComboBox<>();
+        jLabel66 = new javax.swing.JLabel();
+        jLabel67 = new javax.swing.JLabel();
+        jLabel68 = new javax.swing.JLabel();
+        cb_movilidad1 = new javax.swing.JComboBox<>();
         datosPersonales = new javax.swing.JLabel();
         datosVivienda = new javax.swing.JLabel();
         extrasVivienda2 = new javax.swing.JLabel();
@@ -415,6 +486,60 @@ public class registro extends javax.swing.JFrame {
 
         jPanel3.add(cbCiudad_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 180, -1));
 
+        jLabel28.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel28.setText("Pais donde esta ubicada:");
+        jPanel3.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 180, 20));
+
+        jPanel3.add(cbPais_vivienda1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 180, -1));
+
+        jLabel22.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel22.setText("Ciudad donde esta ubicada");
+        jPanel3.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 190, 20));
+
+        jPanel3.add(cbCiudad_vivienda1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 180, -1));
+
+        jLabel23.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel23.setText("Barrio donde esta ubicada:");
+        jPanel3.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 190, 20));
+
+        txtBarrio1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        jPanel3.add(txtBarrio1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 180, -1));
+
+        jLabel26.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel26.setText("Direccion:");
+        jPanel3.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 180, 20));
+
+        txtDireccion_vivienda1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        jPanel3.add(txtDireccion_vivienda1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, 180, -1));
+
+        jLabel52.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel52.setText("Capacidad maxima:");
+        jPanel3.add(jLabel52, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, 180, 20));
+        jPanel3.add(jsCapacidad1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 140, 170, -1));
+
+        jLabel53.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel53.setText("numero de habitaciones:");
+        jPanel3.add(jLabel53, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 190, 180, 20));
+        jPanel3.add(jsHabitaciones1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 220, 170, -1));
+
+        jLabel54.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel54.setText("numero de baños:");
+        jPanel3.add(jLabel54, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 270, 180, 20));
+        jPanel3.add(jsBaños1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 300, 170, 30));
+
+        jLabel55.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel55.setText("Tipo de vivienda:");
+        jPanel3.add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 350, 130, 20));
+
+        jPanel3.add(cbTipo_vivienda1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 380, 170, -1));
+
+        jLabel56.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel56.setText("Precio por noche:");
+        jPanel3.add(jLabel56, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 110, 190, 20));
+
+        txtPrecio1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        jPanel3.add(txtPrecio1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 140, 180, -1));
+
         jTabbedPane1.addTab("tab2", jPanel3);
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -452,8 +577,7 @@ public class registro extends javax.swing.JFrame {
         });
         jPanel5.add(Fotos, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 250, 70, 70));
 
-        lbVista_Previa.setText("jLabel2");
-        lbVista_Previa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        lbVista_Previa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jPanel5.add(lbVista_Previa, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 230, 130, 100));
 
         jLabel37.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
@@ -481,7 +605,7 @@ public class registro extends javax.swing.JFrame {
         jPanel5.add(jLabel42, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 300, 130, 20));
 
         jLabel43.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel43.setText("¿Tiene agua caliente?");
+        jLabel43.setText("¿Tiene calefaccion?");
         jPanel5.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 370, 160, 20));
 
         jLabel44.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
@@ -547,6 +671,97 @@ public class registro extends javax.swing.JFrame {
         cb_vigilancia.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
         cb_vigilancia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Si", "No" }));
         jPanel5.add(cb_vigilancia, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 270, 170, 30));
+
+        jLabel57.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel57.setText("Pequeña descripcion:");
+        jPanel5.add(jLabel57, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 180, 20));
+
+        taDescripcion1.setColumns(20);
+        taDescripcion1.setRows(5);
+        jScrollPane2.setViewportView(taDescripcion1);
+
+        jPanel5.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 220, 100));
+
+        Fotos1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/mas.png"))); // NOI18N
+        Fotos1.setText("jLabel2");
+        Fotos1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        Fotos1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Fotos1MouseClicked(evt);
+            }
+        });
+        jPanel5.add(Fotos1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 250, 70, 70));
+
+        jLabel58.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel58.setText("Añadir fotos");
+        jPanel5.add(jLabel58, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 90, 20));
+
+        lbVista_Previa1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel5.add(lbVista_Previa1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 230, 130, 100));
+
+        jLabel59.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel59.setText("¿Tiene piscina?");
+        jPanel5.add(jLabel59, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 130, 20));
+
+        cbPiscina1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        cbPiscina1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Si", "No" }));
+        jPanel5.add(cbPiscina1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 170, -1));
+
+        jLabel60.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel60.setText("¿Tiene parrilla?");
+        jPanel5.add(jLabel60, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 70, 130, 20));
+
+        cbParrilla1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        cbParrilla1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Si", "No" }));
+        jPanel5.add(cbParrilla1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, 170, -1));
+
+        jLabel61.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel61.setText("¿Se permiten mascotas?");
+        jPanel5.add(jLabel61, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 140, 170, -1));
+
+        cbMascotas1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        cbMascotas1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Si", "No" }));
+        jPanel5.add(cbMascotas1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 170, 170, -1));
+
+        jLabel62.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel62.setText("¿Tiene parque ");
+        jPanel5.add(jLabel62, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 210, 110, 20));
+
+        jLabel63.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel63.setText("o zonas verdes?");
+        jPanel5.add(jLabel63, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 230, 110, 20));
+
+        cbParques1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        cbParques1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Si", "No" }));
+        jPanel5.add(cbParques1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 260, 170, -1));
+
+        jLabel64.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel64.setText("¿Tiene balcon?");
+        jPanel5.add(jLabel64, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 300, 130, 20));
+
+        cbBalcon1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        cbBalcon1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Si", "No" }));
+        jPanel5.add(cbBalcon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 330, 170, -1));
+
+        cbAgua1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        cbAgua1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Si", "No" }));
+        jPanel5.add(cbAgua1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 400, 170, -1));
+
+        jLabel66.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel66.setText("¿Tiene acceso para ");
+        jPanel5.add(jLabel66, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 110, 140, -1));
+
+        jLabel67.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel67.setText("personas con movilidad");
+        jPanel5.add(jLabel67, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 130, 170, -1));
+
+        jLabel68.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel68.setText("reducida o dificultada?");
+        jPanel5.add(jLabel68, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 150, 170, -1));
+
+        cb_movilidad1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        cb_movilidad1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Si", "No" }));
+        jPanel5.add(cb_movilidad1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 180, 170, 30));
 
         jTabbedPane1.addTab("tab3", jPanel5);
 
@@ -635,80 +850,54 @@ public class registro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ContinuarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ContinuarMouseClicked
-      /*  // TODO add your handling code here:
-        List<String> rutasFinalesDB = new ArrayList<>();
-    
-    if (rutasMultiplesArchivos.isEmpty()) {
-        System.out.println("No se seleccionaron fotos para la vivienda.");
-    } else {
-        try {
-            // Itera sobre cada ruta seleccionada por el usuario
-            for (String rutaOriginal : rutasMultiplesArchivos) {
-                
-                // Llama a la función que copia el archivo y devuelve la ruta permanente
-                String rutaPermanente = guardarFotoEnDirectorio(rutaOriginal);
-                
-                // Añade la ruta final a la lista para guardar en la base de datos
-                rutasFinalesDB.add(rutaPermanente);
-            }
-            
-            // Aquí llamas a tu DAO (Data Access Object) para guardar las rutas en la Base de Datos
-            // ViviendaDAO.guardarRutasFotos(idDeLaVivienda, rutasFinalesDB);
-            
-            System.out.println("Fotos procesadas y listas para la Base de Datos.");
-            
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al procesar las fotos: " + e.getMessage());
-            e.printStackTrace();
-            return; // Detiene el proceso si hay un error de manejo de archivos
-        }
-    }*/
+        guardarFotos();
     }//GEN-LAST:event_ContinuarMouseClicked
 
     private void FotosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FotosMouseClicked
-        JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setMultiSelectionEnabled(true); 
-    
-    // Filtro para solo ver archivos de imagen
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setMultiSelectionEnabled(true);
+
+    // Filtro para imágenes 
     FileNameExtensionFilter filtro = new FileNameExtensionFilter(
-            "Archivos de Imagen (JPG, PNG, GIF)", "jpg", "jpeg", "png", "gif");
+            "Imágenes (JPG, PNG, GIF)", "jpg", "jpeg", "png", "gif");
     fileChooser.setFileFilter(filtro);
 
-    int resultado = fileChooser.showOpenDialog(this); 
+    int resultado = fileChooser.showOpenDialog(this);
 
     if (resultado == JFileChooser.APPROVE_OPTION) {
-        
-        File[] archivosSeleccionados = fileChooser.getSelectedFiles();
-        
-        // Limpiamos la lista global
-        rutasMultiplesArchivos.clear(); 
 
-        for (File archivo : archivosSeleccionados) {
-            String ruta = archivo.getAbsolutePath();
-            rutasMultiplesArchivos.add(ruta); 
-            
-            // Lógica Opcional: Mostrar la primera foto en la vista previa
-            if (rutasMultiplesArchivos.size() == 1) {
-                 try {
-                     ImageIcon iconoOriginal = new ImageIcon(ruta);
-                     
-                     // Ajusta el tamaño si tienes un JLabel de vista previa (lblVistaPreviaFoto1)
-                     int ancho = lbVista_Previa.getWidth();
-                     int alto = lbVista_Previa.getHeight();
-                     ImageIcon iconoEscalado = new ImageIcon(
-                         iconoOriginal.getImage().getScaledInstance(ancho, alto, java.awt.Image.SCALE_SMOOTH)
-                     );
-                     lbVista_Previa.setIcon(iconoEscalado);
-                     
-                 } catch (Exception ex) { 
-                     System.err.println("Error al mostrar vista previa: " + ex.getMessage());
-                 }
+    // Guardamos los archivos seleccionados en la variable global
+    fotosSeleccionadas = fileChooser.getSelectedFiles();
+
+    rutasMultiplesArchivos.clear(); 
+
+    for (int i = 0; i < fotosSeleccionadas.length; i++) {
+        File archivo = fotosSeleccionadas[i];
+        rutasMultiplesArchivos.add(archivo.getAbsolutePath());
+
+        // Solo vista previa de la primera foto
+        if (i == 0) {
+            try {
+                ImageIcon iconoOriginal = new ImageIcon(archivo.getAbsolutePath());
+
+                int ancho = lbVista_Previa.getWidth();
+                int alto = lbVista_Previa.getHeight();
+
+                Image imagenEscalada = iconoOriginal.getImage()
+                        .getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+
+                lbVista_Previa.setIcon(new ImageIcon(imagenEscalada));
+
+            } catch (Exception ex) {
+                System.err.println("Error mostrando vista previa: " + ex.getMessage());
             }
         }
-        // Muestra cuántas fotos se seleccionaron
-        JOptionPane.showMessageDialog(this, 
-            rutasMultiplesArchivos.size() + " fotos seleccionadas.");
     }
+
+    JOptionPane.showMessageDialog(this,
+        fotosSeleccionadas.length + " fotos seleccionadas.");
+}
+
     }//GEN-LAST:event_FotosMouseClicked
 
     private void datosPersonalesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_datosPersonalesMouseClicked
@@ -730,6 +919,10 @@ public class registro extends javax.swing.JFrame {
         // TODO add your handling code here:
         jTabbedPane1.setSelectedIndex(2);
     }//GEN-LAST:event_extrasVivienda2MouseClicked
+
+    private void Fotos1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Fotos1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Fotos1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -769,20 +962,31 @@ public class registro extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Continuar;
     private javax.swing.JLabel Fotos;
+    private javax.swing.JLabel Fotos1;
     private javax.swing.JComboBox<String> cbAgua;
+    private javax.swing.JComboBox<String> cbAgua1;
     private javax.swing.JComboBox<String> cbBalcon;
+    private javax.swing.JComboBox<String> cbBalcon1;
     private javax.swing.JComboBox<String> cbCiudad;
     private javax.swing.JComboBox<String> cbCiudad_vivienda;
+    private javax.swing.JComboBox<String> cbCiudad_vivienda1;
     private javax.swing.JComboBox<String> cbConjunto;
     private javax.swing.JComboBox<String> cbIdioma;
     private javax.swing.JComboBox<String> cbMascotas;
+    private javax.swing.JComboBox<String> cbMascotas1;
     private javax.swing.JComboBox<String> cbPais;
     private javax.swing.JComboBox<String> cbPais_vivienda;
+    private javax.swing.JComboBox<String> cbPais_vivienda1;
     private javax.swing.JComboBox<String> cbParques;
+    private javax.swing.JComboBox<String> cbParques1;
     private javax.swing.JComboBox<String> cbParrilla;
+    private javax.swing.JComboBox<String> cbParrilla1;
     private javax.swing.JComboBox<String> cbPiscina;
+    private javax.swing.JComboBox<String> cbPiscina1;
     private javax.swing.JComboBox<String> cbTipo_vivienda;
+    private javax.swing.JComboBox<String> cbTipo_vivienda1;
     private javax.swing.JComboBox<String> cb_movilidad;
+    private javax.swing.JComboBox<String> cb_movilidad1;
     private javax.swing.JComboBox<String> cb_vigilancia;
     private javax.swing.JLabel datosPersonales;
     private javax.swing.JLabel datosVivienda;
@@ -801,9 +1005,13 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
@@ -828,7 +1036,23 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
+    private javax.swing.JLabel jLabel52;
+    private javax.swing.JLabel jLabel53;
+    private javax.swing.JLabel jLabel54;
+    private javax.swing.JLabel jLabel55;
+    private javax.swing.JLabel jLabel56;
+    private javax.swing.JLabel jLabel57;
+    private javax.swing.JLabel jLabel58;
+    private javax.swing.JLabel jLabel59;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel60;
+    private javax.swing.JLabel jLabel61;
+    private javax.swing.JLabel jLabel62;
+    private javax.swing.JLabel jLabel63;
+    private javax.swing.JLabel jLabel64;
+    private javax.swing.JLabel jLabel66;
+    private javax.swing.JLabel jLabel67;
+    private javax.swing.JLabel jLabel68;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -839,23 +1063,32 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private com.toedter.calendar.JDateChooser jdNacimiento;
     private com.toedter.components.JSpinField jsBaños;
+    private com.toedter.components.JSpinField jsBaños1;
     private com.toedter.components.JSpinField jsCapacidad;
+    private com.toedter.components.JSpinField jsCapacidad1;
     private com.toedter.components.JSpinField jsEdad;
     private com.toedter.components.JSpinField jsHabitaciones;
+    private com.toedter.components.JSpinField jsHabitaciones1;
     private javax.swing.JLabel lbVista_Previa;
+    private javax.swing.JLabel lbVista_Previa1;
     private javax.swing.JTextArea taDescripcion;
+    private javax.swing.JTextArea taDescripcion1;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtBarrio;
+    private javax.swing.JTextField txtBarrio1;
     private javax.swing.JTextField txtContraseña;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtDireccion_vivienda;
+    private javax.swing.JTextField txtDireccion_vivienda1;
     private javax.swing.JTextField txtDocumento;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecio;
+    private javax.swing.JTextField txtPrecio1;
     private javax.swing.JTextField txtTelefono;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables

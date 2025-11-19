@@ -1,18 +1,19 @@
 package Model;
 
-public class Alojamiento {
+import java.util.List;
 
-    private String num_casa;
+public class Alojamiento {
     private String pais;
     private String ciudad;
     private String barrio;
     private String direccion;
+    private String ubicacion;
     private String descripcion;
     private String capacidad_maxima;
     private String num_habitaciones;
     private String num_baños;
     private String tipo_vivienda;
-    private String fotos;
+    private List<String> fotos;
     private boolean disponibilidad;
     private boolean piscina;
     private boolean parrilla;
@@ -25,25 +26,45 @@ public class Alojamiento {
     private boolean conjunto_cerrado;
     private double precio_noche;
 
-    public Alojamiento(String num_casa, String barrio, String direccion, String descripcion, String capacidad_maxima, String num_habitaciones, String num_baños, String tipo_vivienda, boolean disponibilidad, double precio_noche) {
-        this.num_casa = num_casa;
+    public Alojamiento(String pais, String ciudad, String barrio, String direccion, String ubicacion, String descripcion, String capacidad_maxima, String num_habitaciones, String num_baños, String tipo_vivienda, List<String> fotos, boolean disponibilidad, boolean piscina, boolean parrilla, boolean mascotas, boolean parques, boolean balcon, boolean agua_caliente, boolean personas_poca_movilidad, boolean vigilancia, boolean conjunto_cerrado, double precio_noche) {
+        this.pais = pais;
+        this.ciudad = ciudad;
         this.barrio = barrio;
         this.direccion = direccion;
+        this.ubicacion = ubicacion;
         this.descripcion = descripcion;
         this.capacidad_maxima = capacidad_maxima;
         this.num_habitaciones = num_habitaciones;
         this.num_baños = num_baños;
         this.tipo_vivienda = tipo_vivienda;
+        this.fotos = fotos;
         this.disponibilidad = disponibilidad;
+        this.piscina = piscina;
+        this.parrilla = parrilla;
+        this.mascotas = mascotas;
+        this.parques = parques;
+        this.balcon = balcon;
+        this.agua_caliente = agua_caliente;
+        this.personas_poca_movilidad = personas_poca_movilidad;
+        this.vigilancia = vigilancia;
+        this.conjunto_cerrado = conjunto_cerrado;
         this.precio_noche = precio_noche;
     }
 
-    public String getNum_casa() {
-        return num_casa;
+    public String getPais() {
+        return pais;
     }
 
-    public void setNum_casa(String num_casa) {
-        this.num_casa = num_casa;
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
     }
 
     public String getBarrio() {
@@ -60,6 +81,14 @@ public class Alojamiento {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
     public String getDescripcion() {
@@ -102,12 +131,92 @@ public class Alojamiento {
         this.tipo_vivienda = tipo_vivienda;
     }
 
+    public List<String> getFotos() {
+        return fotos;
+    }
+
+    public void setFotos(List<String> fotos) {
+        this.fotos = fotos;
+    }
+
     public boolean isDisponibilidad() {
         return disponibilidad;
     }
 
     public void setDisponibilidad(boolean disponibilidad) {
         this.disponibilidad = disponibilidad;
+    }
+
+    public boolean isPiscina() {
+        return piscina;
+    }
+
+    public void setPiscina(boolean piscina) {
+        this.piscina = piscina;
+    }
+
+    public boolean isParrilla() {
+        return parrilla;
+    }
+
+    public void setParrilla(boolean parrilla) {
+        this.parrilla = parrilla;
+    }
+
+    public boolean isMascotas() {
+        return mascotas;
+    }
+
+    public void setMascotas(boolean mascotas) {
+        this.mascotas = mascotas;
+    }
+
+    public boolean isParques() {
+        return parques;
+    }
+
+    public void setParques(boolean parques) {
+        this.parques = parques;
+    }
+
+    public boolean isBalcon() {
+        return balcon;
+    }
+
+    public void setBalcon(boolean balcon) {
+        this.balcon = balcon;
+    }
+
+    public boolean isAgua_caliente() {
+        return agua_caliente;
+    }
+
+    public void setAgua_caliente(boolean agua_caliente) {
+        this.agua_caliente = agua_caliente;
+    }
+
+    public boolean isPersonas_poca_movilidad() {
+        return personas_poca_movilidad;
+    }
+
+    public void setPersonas_poca_movilidad(boolean personas_poca_movilidad) {
+        this.personas_poca_movilidad = personas_poca_movilidad;
+    }
+
+    public boolean isVigilancia() {
+        return vigilancia;
+    }
+
+    public void setVigilancia(boolean vigilancia) {
+        this.vigilancia = vigilancia;
+    }
+
+    public boolean isConjunto_cerrado() {
+        return conjunto_cerrado;
+    }
+
+    public void setConjunto_cerrado(boolean conjunto_cerrado) {
+        this.conjunto_cerrado = conjunto_cerrado;
     }
 
     public double getPrecio_noche() {
@@ -118,4 +227,5 @@ public class Alojamiento {
         this.precio_noche = precio_noche;
     }
 
+      
 }
