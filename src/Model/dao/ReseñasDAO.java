@@ -4,10 +4,13 @@
  */
 package Model.dao;
 
+import Estructuras.Lista_reseñas;
+
 /**
  *
  * @author aylee
  */
 public interface ReseñasDAO {
-    
+    void guardarReseñas(Lista_reseñas lista);
+    Lista_reseñas cargarReseñas();
 }

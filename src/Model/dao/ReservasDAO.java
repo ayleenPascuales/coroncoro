@@ -4,10 +4,15 @@
  */
 package Model.dao;
 
+import Estructuras.Lista_reservas;
+
 /**
  *
  * @author aylee
  */
 public interface ReservasDAO {
-    
+
+    void guardarReservas(Lista_reservas lista);
+
+    Lista_reservas cargarReservas();
 }

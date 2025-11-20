@@ -4,10 +4,16 @@
  */
 package Model.dao;
 
+import Estructuras.Lista_alojamiento;
+
 /**
  *
  * @author aylee
  */
 public interface AlojamientoDAO {
-    
+
+    // Solo definimos los métodos obligatorios
+    void guardarAlojamientos(Lista_alojamiento lista);
+
+    Lista_alojamiento cargarAlojamientos();
 }

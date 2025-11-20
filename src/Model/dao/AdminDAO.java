@@ -4,10 +4,13 @@
  */
 package Model.dao;
 
+import Estructuras.Lista_admins;
+
 /**
  *
  * @author aylee
  */
 public interface AdminDAO {
-    
+    void guardarAdmins(Lista_admins lista);
+    Lista_admins cargarAdmins();
 }

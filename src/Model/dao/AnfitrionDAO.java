@@ -4,10 +4,15 @@
  */
 package Model.dao;
 
+import Estructuras.Lista_anfitriones;
+
 /**
  *
  * @author aylee
  */
 public interface AnfitrionDAO {
-    
+
+    void guardarAnfitriones(Lista_anfitriones lista);
+
+    Lista_anfitriones cargarAnfitriones();
 }

@@ -4,10 +4,13 @@
  */
 package Model.dao;
 
+import Estructuras.Lista_usuarios;
+
 /**
  *
  * @author aylee
  */
 public interface UsuariosDAO {
-    
+    void guardarUsuarios(Lista_usuarios lista);
+    Lista_usuarios cargarUsuarios();
 }

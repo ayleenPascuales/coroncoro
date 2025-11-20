@@ -1,23 +1,24 @@
 package Estructuras;
 
-import Model.Persona;
+import Model.Usuario;
 
 public class Nodo_usuarios {
-    private Persona dato;
+
+    private Usuario dato; // <-- CAMBIO CLAVE: Ahora guarda el objeto Usuario
     private Nodo_usuarios anterior;
     private Nodo_usuarios siguiente;
-    
-    public Nodo_usuarios(Persona dato) {
+
+    public Nodo_usuarios(Usuario dato) {
         this.dato = dato;
         this.anterior = null;
         this.siguiente = null;
     }
 
-    public Persona getDato() {
+    public Usuario getDato() {
         return dato;
     }
 
-    public void setDato(Persona dato) {
+    public void setDato(Usuario dato) {
         this.dato = dato;
     }
 
@@ -36,5 +37,4 @@ public class Nodo_usuarios {
     public void setSiguiente(Nodo_usuarios siguiente) {
         this.siguiente = siguiente;
     }
-   
 }
