@@ -4,7 +4,9 @@
  */
 package Model.dao;
 
-import Estructuras.Lista_anfitriones;
+
+import Model.Cuenta_Anfitrion;
+import java.util.List;
 
 /**
  *
@@ -12,7 +14,9 @@ import Estructuras.Lista_anfitriones;
  */
 public interface AnfitrionDAO {
 
-    void guardarAnfitriones(Lista_anfitriones lista);
-
-    Lista_anfitriones cargarAnfitriones();
+    void guardarAnfitrion(Cuenta_Anfitrion anfitrion);
+    List<Cuenta_Anfitrion> cargarAnfitriones();
+    Cuenta_Anfitrion buscarPorId(String id);
+    boolean eliminarAnfitrion(String id);
+    boolean modificarAnfitrion(Cuenta_Anfitrion anfitrion);
 }

@@ -5,6 +5,7 @@
 package Model.dao;
 
 import Estructuras.Lista_usuarios;
+import Model.JsonUtil.JsonUtil;
 import Model.Usuario;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,43 +23,65 @@ import java.util.List;
  */
 public class UsuariosDAOImpl implements UsuariosDAO {
 
-    private static final String RUTA_ARCHIVO = "src/json/usuarios.json";
+    private static final String ARCHIVO_USUARIOS = "src/json/usuarios.json";
+    private final Lista_usuarios lista = new Lista_usuarios();
     private final Gson gson;
 
     public UsuariosDAOImpl() {
         // Gson simple, ya que la clase Usuario solo contiene Strings
         this.gson = new GsonBuilder().setPrettyPrinting().create();
+        
+       cargarDesdeJson();
     }
+    
+    private void cargarDesdeJson() {
+        Type tipoLista = new TypeToken<List<Usuario>>() {}.getType();
+        List<Usuario> datos = JsonUtil.leerJson(ARCHIVO_USUARIOS, tipoLista);
 
-    @Override
-    public void guardarUsuarios(Lista_usuarios listaDoble) {
-        try (FileWriter writer = new FileWriter(RUTA_ARCHIVO)) {
-            List<Usuario> datos = listaDoble.getListaParaJson();
-            gson.toJson(datos, writer);
-            System.out.println("--- Usuarios guardados correctamente ---");
-        } catch (IOException e) {
-            System.err.println("Error guardando Usuarios: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public Lista_usuarios cargarUsuarios() {
-        Lista_usuarios listaRecuperada = new Lista_usuarios();
-
-        try (FileReader reader = new FileReader(RUTA_ARCHIVO)) {
-            Type tipoLista = new TypeToken<ArrayList<Usuario>>() {
-            }.getType();
-            List<Usuario> listaTemporal = gson.fromJson(reader, tipoLista);
-
-            if (listaTemporal != null) {
-                for (Usuario usuario : listaTemporal) {
-                    listaRecuperada.agregar(usuario);
-                }
+        if (datos != null) {
+            for (Usuario u : datos) {
+                lista.agregar(u);
             }
-        } catch (IOException e) {
-            System.out.println("No hay archivo de usuarios. Se retorna lista vacía.");
         }
-
-        return listaRecuperada;
     }
+    
+    private void guardarEnJson() {
+        JsonUtil.guardarJson(lista.getListaParaJson(), ARCHIVO_USUARIOS);
+    }
+    
+    @Override
+    public void guardarUsuario(Usuario usuario) {
+        lista.agregar(usuario);
+        guardarEnJson();
+    }
+
+    @Override
+    public List<Usuario> cargarUsuarios() {
+        return lista.getListaParaJson();
+    }
+
+    @Override
+    public Usuario buscarPorId(String id) {
+        return lista.buscarPorId(id);
+    }
+
+    @Override
+    public boolean eliminarUsuario(String id) {
+        boolean eliminado = lista.eliminar(id);
+        if (eliminado) {
+            guardarEnJson();
+        }
+        return eliminado;
+    }
+
+    @Override
+    public boolean modificarUsuario(Usuario usuario) {
+        boolean mod = lista.modificar(usuario);
+        if (mod) {
+            guardarEnJson();
+        }
+        return mod;
+    }
+
+
 }

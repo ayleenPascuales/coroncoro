@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class Cuenta_Anfitrion extends Preferencias {
-
+    
+    
     private LocalDate fecha_inicio; //fecha en que creo su primera publicacion
     private boolean estado;
     private String calificacion;

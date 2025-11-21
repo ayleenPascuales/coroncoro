@@ -38,6 +38,71 @@ public class Lista_anfitriones {
         }
         tamano++;
     }
+    
+    public Cuenta_Anfitrion buscarPorId(String id) {
+        Nodo_anfitrion actual = cabeza;
+
+        while (actual != null) {
+            if (actual.getDato().getDocumento().equals(id)) {
+                return actual.getDato();
+            }
+            actual = actual.getSiguiente();
+        }
+
+        return null;
+    }
+    
+    public boolean eliminar(String id) {
+        Nodo_anfitrion actual = cabeza;
+
+        while (actual != null) {
+            if (actual.getDato().getDocumento().equals(id)) {
+
+                // caso: único nodo
+                if (actual == cabeza && actual == cola) {
+                    cabeza = null;
+                    cola = null;
+                }
+                // caso: es cabeza
+                else if (actual == cabeza) {
+                    cabeza = cabeza.getSiguiente();
+                    cabeza.setAnterior(null);
+                }
+                // caso: es cola
+                else if (actual == cola) {
+                    cola = cola.getAnterior();
+                    cola.setSiguiente(null);
+                }
+                // caso: en medio
+                else {
+                    actual.getAnterior().setSiguiente(actual.getSiguiente());
+                    actual.getSiguiente().setAnterior(actual.getAnterior());
+                }
+
+                tamano--;
+                return true;
+            }
+
+            actual = actual.getSiguiente();
+        }
+
+        return false;
+    }
+    
+    public boolean modificar(Cuenta_Anfitrion nuevo) {
+        Nodo_anfitrion actual = cabeza;
+
+        while (actual != null) {
+            if (actual.getDato().getDocumento().equals(nuevo.getDocumento())) {
+                actual.setDato(nuevo);
+                return true;
+            }
+            actual = actual.getSiguiente();
+        }
+
+        return false;
+    }
+
 
     // MÉTODO PARA GSON (Convierte la lista enlazada a un ArrayList)
     public List<Cuenta_Anfitrion> getListaParaJson() {

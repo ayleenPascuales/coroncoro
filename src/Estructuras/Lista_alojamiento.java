@@ -29,11 +29,9 @@ public class Lista_alojamiento {
         Nodo_alojamiento nuevo = new Nodo_alojamiento(dato);
 
         if (cabeza == null) {
-            // Caso: Lista vacía
             cabeza = nuevo;
             cola = nuevo;
         } else {
-            // Caso: Lista con elementos
             cola.setSiguiente(nuevo);    // El siguiente del último actual es el nuevo
             nuevo.setAnterior(cola);     // El anterior del nuevo es el último actual
             cola = nuevo;                // Actualizamos la cola
@@ -41,9 +39,6 @@ public class Lista_alojamiento {
         tamano++;
     }
 
-    // MÉTODO PUENTE PARA GSON (Vital para guardar en JSON)
-    // Gson no sabe recorrer tus nodos, así que convertimos tu lista enlazada
-    // a una lista de Java normal temporalmente solo para guardar.
     public List<Alojamiento> getListaParaJson() {
         List<Alojamiento> listaJava = new ArrayList<>();
         Nodo_alojamiento actual = cabeza;
@@ -54,13 +49,11 @@ public class Lista_alojamiento {
         }
         return listaJava;
     }
-
-    // Método para verificar si está vacía
+    
     public boolean estaVacia() {
         return cabeza == null;
     }
 
-    // Método para mostrar en consola (Debugging)
     public void listarEnConsola() {
         Nodo_alojamiento actual = cabeza;
         System.out.println("--- LISTA DE ALOJAMIENTOS ---");
@@ -73,4 +66,65 @@ public class Lista_alojamiento {
     public int getTamano() {
         return tamano;
     }
+    
+    public Alojamiento buscarPorId(String id) {
+    Nodo_alojamiento actual = cabeza;
+    while (actual != null) {
+        if (actual.getDato().getId_Alojamiento().equals(id)) {
+            return actual.getDato();
+        }
+        actual = actual.getSiguiente();
+    }
+    return null;
+}
+
+public boolean eliminar(String id) {
+    Nodo_alojamiento actual = cabeza;
+
+    while (actual != null) {
+        if (actual.getDato().getId_Alojamiento().equals(id)) {
+
+            // caso: único elemento
+            if (actual == cabeza && actual == cola) {
+                cabeza = null;
+                cola = null;
+            }
+            // caso: es cabeza
+            else if (actual == cabeza) {
+                cabeza = cabeza.getSiguiente();
+                cabeza.setAnterior(null);
+            }
+            // caso: es cola
+            else if (actual == cola) {
+                cola = cola.getAnterior();
+                cola.setSiguiente(null);
+            }
+            // caso: en medio
+            else {
+                actual.getAnterior().setSiguiente(actual.getSiguiente());
+                actual.getSiguiente().setAnterior(actual.getAnterior());
+            }
+
+            tamano--;
+            return true;
+        }
+        actual = actual.getSiguiente();
+    }
+
+    return false;
+}
+
+public boolean modificar(Alojamiento nuevo) {
+    Nodo_alojamiento actual = cabeza;
+
+    while (actual != null) {
+        if (actual.getDato().getId_Alojamiento().equals(nuevo.getId_Alojamiento())) {
+            actual.setDato(nuevo);
+            return true;
+        }
+        actual = actual.getSiguiente();
+    }
+
+    return false;
+}
 }

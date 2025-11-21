@@ -4,7 +4,9 @@
  */
 package Model.dao;
 
-import Estructuras.Lista_alojamiento;
+
+import Model.Alojamiento;
+import java.util.List;
 
 /**
  *
@@ -12,8 +14,10 @@ import Estructuras.Lista_alojamiento;
  */
 public interface AlojamientoDAO {
 
-    // Solo definimos los métodos obligatorios
-    void guardarAlojamientos(Lista_alojamiento lista);
-
-    Lista_alojamiento cargarAlojamientos();
+    void guardarAlojamientos(Alojamiento alojamientos);
+    List<Alojamiento> cargarAlojamientos();
+    Alojamiento BuscarPorId(String id);
+    boolean eliminarAlojamiento(String id);
+    boolean modificarAlojamiento(Alojamiento alojamientos);
+    
 }

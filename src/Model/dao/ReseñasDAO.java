@@ -5,12 +5,17 @@
 package Model.dao;
 
 import Estructuras.Lista_reseñas;
+import Model.Reseñas;
+import java.util.List;
 
 /**
  *
  * @author aylee
  */
 public interface ReseñasDAO {
-    void guardarReseñas(Lista_reseñas lista);
-    Lista_reseñas cargarReseñas();
+    void guardarReseña(Reseñas reseña);
+    List<Reseñas> cargarReseñas();
+    Reseñas buscarPorId(String id);
+    boolean eliminarReseña(String id);
+    boolean modificarReseña(Reseñas reseñaActualizada);
 }

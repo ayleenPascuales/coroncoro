@@ -4,13 +4,17 @@
  */
 package Model.dao;
 
-import Estructuras.Lista_usuarios;
+import Model.Usuario;
+import java.util.List;
 
 /**
  *
  * @author aylee
  */
 public interface UsuariosDAO {
-    void guardarUsuarios(Lista_usuarios lista);
-    Lista_usuarios cargarUsuarios();
+    void guardarUsuario(Usuario usuario);
+    List<Usuario> cargarUsuarios();
+    Usuario buscarPorId(String id);
+    boolean eliminarUsuario(String id);
+    boolean modificarUsuario(Usuario usuario);
 }

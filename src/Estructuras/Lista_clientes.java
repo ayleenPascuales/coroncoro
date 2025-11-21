@@ -39,7 +39,63 @@ public class Lista_clientes {
         }
         tamano++;
     }
+    
+    public Cuenta_cliente buscarPorId(String id) {
+        Nodo_cliente actual = cabeza;
 
+        while (actual != null) {
+            if (actual.getDato().getDocumento().equals(id)) {
+                return actual.getDato();
+            }
+            actual = actual.getSiguiente();
+        }
+
+        return null;
+    }
+    
+    public boolean eliminar(String id) {
+        Nodo_cliente actual = cabeza;
+
+        while (actual != null) {
+
+            if (actual.getDato().getDocumento().equals(id)) {
+
+                Nodo_cliente ant = actual.getAnterior();
+                Nodo_cliente sig = actual.getSiguiente();
+
+                // Si el nodo era el primero
+                if (ant != null) ant.setSiguiente(sig);
+                else cabeza = sig;
+
+                // Si el nodo era el último
+                if (sig != null) sig.setAnterior(ant);
+                else cola = ant;
+
+                tamano--;
+                return true;
+            }
+
+            actual = actual.getSiguiente();
+        }
+
+        return false;
+    }
+    
+    public boolean modificar(Cuenta_cliente actualizado) {
+        Nodo_cliente actual = cabeza;
+
+        while (actual != null) {
+
+            if (actual.getDato().getDocumento().equals(actualizado.getDocumento())) {
+                actual.setDato(actualizado);
+                return true;
+            }
+
+            actual = actual.getSiguiente();
+        }
+
+        return false;
+    }
     // MÉTODO PUENTE PARA GSON
     public List<Cuenta_cliente> getListaParaJson() {
         List<Cuenta_cliente> listaJava = new ArrayList<>();
@@ -49,9 +105,13 @@ public class Lista_clientes {
             listaJava.add(actual.getDato());
             actual = actual.getSiguiente();
         }
-        return listaJava;
+        return listaJava;   
     }
-
+    
+    public int getTamano() {
+        return tamano;
+    }
+    
     public boolean estaVacia() {
         return cabeza == null;
     }

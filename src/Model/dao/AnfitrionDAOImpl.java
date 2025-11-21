@@ -6,6 +6,9 @@ package Model.dao;
 
 import Estructuras.Lista_anfitriones;
 import Model.Cuenta_Anfitrion;
+import Model.JsonUtil.JsonLocalDateApadter;
+import Model.JsonUtil.JsonLocalTimeAdapter;
+import Model.JsonUtil.JsonUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -17,6 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,49 +30,64 @@ import java.util.List;
  */
 public class AnfitrionDAOImpl implements AnfitrionDAO {
 
-    private static final String RUTA_ARCHIVO = "src/json/anfitriones.json";
+    private static final String     ARCHIVO_ANFITRIONES = "src/json/anfitriones.json";
+    private final Lista_anfitriones lista = new Lista_anfitriones();
     private final Gson gson;
 
+
     public AnfitrionDAOImpl() {
-        // CONFIGURACIÓN ESPECIAL PARA LOCALDATE (Necesaria por la herencia de Persona)
-        this.gson = new GsonBuilder()
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new JsonLocalDateApadter())
+                .registerTypeAdapter(LocalTime.class, new JsonLocalTimeAdapter())
                 .setPrettyPrinting()
-                .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (src, typeOfSrc, context)
-                        -> new JsonPrimitive(src.toString()))
-                .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, typeOfT, context)
-                        -> LocalDate.parse(json.getAsString()))
                 .create();
+
+        cargarDesdeJson();
     }
+    
+    private void cargarDesdeJson() {
 
-    @Override
-    public void guardarAnfitriones(Lista_anfitriones listaDoble) {
-        try (FileWriter writer = new FileWriter(RUTA_ARCHIVO)) {
-            List<Cuenta_Anfitrion> datos = listaDoble.getListaParaJson();
-            gson.toJson(datos, writer);
-            System.out.println("--- Anfitriones guardados correctamente ---");
-        } catch (IOException e) {
-            System.err.println("Error guardando Anfitriones: " + e.getMessage());
-        }
-    }
+        Type listType = new TypeToken<List<Cuenta_Anfitrion>>() {}.getType();
 
-    @Override
-    public Lista_anfitriones cargarAnfitriones() {
-        Lista_anfitriones listaRecuperada = new Lista_anfitriones();
+        List<Cuenta_Anfitrion> datos = JsonUtil.leerJson(ARCHIVO_ANFITRIONES, listType);
 
-        try (FileReader reader = new FileReader(RUTA_ARCHIVO)) {
-            Type tipoLista = new TypeToken<ArrayList<Cuenta_Anfitrion>>() {
-            }.getType();
-            List<Cuenta_Anfitrion> listaTemporal = gson.fromJson(reader, tipoLista);
-
-            if (listaTemporal != null) {
-                for (Cuenta_Anfitrion anfitrion : listaTemporal) {
-                    listaRecuperada.agregar(anfitrion);
-                }
+        if (datos != null) {
+            for (Cuenta_Anfitrion a : datos) {
+                lista.agregar(a);
             }
-        } catch (IOException e) {
-            System.out.println("No hay archivo de anfitriones. Se retorna lista vacía.");
         }
+    }
+    private void guardarEnJson() {
+        JsonUtil.guardarJson(lista.getListaParaJson(), ARCHIVO_ANFITRIONES);
+    }
 
-        return listaRecuperada;
+    @Override
+    public void guardarAnfitrion(Cuenta_Anfitrion anfitrion) {
+        lista.agregar(anfitrion);
+        guardarEnJson();
+    }
+
+    @Override
+    public List<Cuenta_Anfitrion> cargarAnfitriones() {
+        return lista.getListaParaJson();
+    }
+
+    @Override
+    public Cuenta_Anfitrion buscarPorId(String id) {
+        return lista.buscarPorId(id);
+    }
+
+    @Override
+    public boolean eliminarAnfitrion(String id) {
+        boolean eliminado = lista.eliminar(id);
+        if (eliminado) guardarEnJson();
+        return eliminado;
+    }
+
+    @Override
+    public boolean modificarAnfitrion(Cuenta_Anfitrion anfitrion) {
+        boolean mod = lista.modificar(anfitrion);
+        if (mod) guardarEnJson();
+        return mod;
     }
 }

@@ -1,11 +1,20 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package Estructuras;
+
 import Model.Cuenta_admin;
 
+/**
+ *
+ * @author aylee
+ */
 public class Nodo_admin {
     private Cuenta_admin dato;
     private Nodo_admin anterior;
     private Nodo_admin siguiente;
-    
+
     public Nodo_admin(Cuenta_admin dato) {
         this.dato = dato;
         this.anterior = null;
@@ -35,4 +44,9 @@ public class Nodo_admin {
     public void setSiguiente(Nodo_admin siguiente) {
         this.siguiente = siguiente;
     }
+    
+    
+    
+    
+    
 }

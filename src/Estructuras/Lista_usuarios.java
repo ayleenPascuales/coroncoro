@@ -38,7 +38,72 @@ public class Lista_usuarios {
         }
         tamano++;
     }
+    
+    public Usuario buscarPorId(String id) {
+        Nodo_usuarios actual = cabeza;
 
+        while (actual != null) {
+            if (actual.getDato().getId_usuario().equals(id)) {
+                return actual.getDato();
+            }
+            actual = actual.getSiguiente();
+        }
+
+        return null;
+    }
+    
+    public boolean eliminar(String id) {
+        if (cabeza == null) return false;
+
+        Nodo_usuarios actual = cabeza;
+
+        while (actual != null) {
+            if (actual.getDato().getId_usuario().equals(id)) {
+
+                // CASO 1: es el único nodo
+                if (actual == cabeza && actual == cola) {
+                    cabeza = null;
+                    cola = null;
+                }
+                // CASO 2: eliminar cabeza
+                else if (actual == cabeza) {
+                    cabeza = cabeza.getSiguiente();
+                    cabeza.setAnterior(null);
+                }
+                // CASO 3: eliminar cola
+                else if (actual == cola) {
+                    cola = cola.getAnterior();
+                    cola.setSiguiente(null);
+                }
+                // CASO 4: nodo intermedio
+                else {
+                    actual.getAnterior().setSiguiente(actual.getSiguiente());
+                    actual.getSiguiente().setAnterior(actual.getAnterior());
+                }
+
+                tamano--;
+                return true;
+            }
+            actual = actual.getSiguiente();
+        }
+
+        return false;
+    }
+    
+    public boolean modificar(Usuario usuarioNuevo) {
+        Nodo_usuarios actual = cabeza;
+
+        while (actual != null) {
+            if (actual.getDato().getId_usuario().equals(usuarioNuevo.getId_usuario())) {
+                actual.setDato(usuarioNuevo);
+                return true;
+            }
+            actual = actual.getSiguiente();
+        }
+
+        return false;
+    }
+    
     // MÉTODO PUENTE PARA GSON
     // Convierte la lista enlazada a un ArrayList de Usuarios (limpio y correcto)
     public List<Usuario> getListaParaJson() {
@@ -58,5 +123,9 @@ public class Lista_usuarios {
 
     public int getTamano() {
         return tamano;
+    }
+    
+    public Nodo_usuarios getCabeza() {
+        return cabeza;
     }
 }

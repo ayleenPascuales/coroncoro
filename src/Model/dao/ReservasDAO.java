@@ -5,6 +5,8 @@
 package Model.dao;
 
 import Estructuras.Lista_reservas;
+import Model.Reservas;
+import java.util.List;
 
 /**
  *
@@ -12,7 +14,9 @@ import Estructuras.Lista_reservas;
  */
 public interface ReservasDAO {
 
-    void guardarReservas(Lista_reservas lista);
-
-    Lista_reservas cargarReservas();
+    void guardarReserva(Reservas reserva);   
+    List<Reservas> cargarReservas();    
+    Reservas buscarPorId(String id);    
+    boolean eliminarReserva(String id); 
+    boolean modificarReserva(Reservas reserva);
 }

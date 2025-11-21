@@ -5,12 +5,17 @@
 package Model.dao;
 
 import Estructuras.Lista_clientes;
+import Model.Cuenta_cliente;
+import java.util.List;
 
 /**
  *
  * @author aylee
  */
 public interface ClienteDAO {
-    void guardarClientes(Lista_clientes lista);
-    Lista_clientes cargarClientes();
+    void guardarClientes(Cuenta_cliente clientes);
+    List<Cuenta_cliente> cargarClientes();
+    Cuenta_cliente buscarPorId(String id);
+    boolean eliminarCliente(String id);
+    boolean modificarCliente(Cuenta_cliente clientes);
 }

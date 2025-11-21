@@ -1,4 +1,5 @@
 package Model;
+import java.util.UUID;
 
 public class Reseñas {
     
@@ -8,7 +9,7 @@ public class Reseñas {
     private String critica;
 
     public Reseñas(String id_reseña, Cuenta_cliente cliente, String calificacion, String critica) {
-        this.id_reseña = id_reseña;
+        this.id_reseña = UUID.randomUUID().toString();
         this.cliente = cliente;
         this.calificacion = calificacion;
         this.critica = critica;

@@ -1,8 +1,10 @@
 package Model;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Alojamiento {
+    private String id_alojamiento;
     private String pais;
     private String ciudad;
     private String barrio;
@@ -26,7 +28,8 @@ public class Alojamiento {
     private boolean conjunto_cerrado;
     private double precio_noche;
 
-    public Alojamiento(String pais, String ciudad, String barrio, String direccion, String ubicacion, String descripcion, String capacidad_maxima, String num_habitaciones, String num_baños, String tipo_vivienda, List<String> fotos, boolean disponibilidad, boolean piscina, boolean parrilla, boolean mascotas, boolean parques, boolean balcon, boolean agua_caliente, boolean personas_poca_movilidad, boolean vigilancia, boolean conjunto_cerrado, double precio_noche) {
+    public Alojamiento(String id_alojamiento, String pais, String ciudad, String barrio, String direccion, String ubicacion, String descripcion, String capacidad_maxima, String num_habitaciones, String num_baños, String tipo_vivienda, List<String> fotos, boolean disponibilidad, boolean piscina, boolean parrilla, boolean mascotas, boolean parques, boolean balcon, boolean agua_caliente, boolean personas_poca_movilidad, boolean vigilancia, boolean conjunto_cerrado, double precio_noche) {
+        this.id_alojamiento = UUID.randomUUID().toString();
         this.pais = pais;
         this.ciudad = ciudad;
         this.barrio = barrio;
@@ -49,6 +52,14 @@ public class Alojamiento {
         this.vigilancia = vigilancia;
         this.conjunto_cerrado = conjunto_cerrado;
         this.precio_noche = precio_noche;
+    }
+
+    public String getId_Alojamiento() {
+        return id_alojamiento;
+    }
+
+    public void setId_Alojamiento(String id_alojamiento) {
+        this.id_alojamiento = id_alojamiento;
     }
 
     public String getPais() {
@@ -226,6 +237,7 @@ public class Alojamiento {
     public void setPrecio_noche(double precio_noche) {
         this.precio_noche = precio_noche;
     }
-
-      
+    
+    
+        
 }

@@ -1,6 +1,7 @@
 package Model;
 
 import java.time.*;
+import java.util.UUID;
 
 public class Reservas {
 
@@ -17,13 +18,11 @@ public class Reservas {
     private LocalDateTime hora_entrada;
     private LocalDateTime hora_salida;
 
-    public Reservas() {
-    }
 
     public Reservas(String num_reserva, String tipo_reserva, String lugar_reserva, String nombre_cliente,
             String apellido_cliente, String documento_cliente, String telefono_cliente, String email_cliente,
             LocalDate dia_entrada, LocalDate dia_salida, LocalDateTime hora_entrada, LocalDateTime hora_salida) {
-        this.num_reserva = num_reserva;
+        this.num_reserva = UUID.randomUUID().toString();
         this.tipo_reserva = tipo_reserva;
         this.lugar_reserva = lugar_reserva;
         this.nombre_cliente = nombre_cliente;

@@ -38,6 +38,73 @@ public class Lista_admins {
         }
         tamano++;
     }
+    
+    public Cuenta_admin buscarPorId(String id) {
+        Nodo_admin actual = cabeza;
+
+        while (actual != null) {
+            if (actual.getDato().getDocumento().equals(id)) {
+                return actual.getDato();
+            }
+            actual = actual.getSiguiente();
+        }
+
+        return null;
+    }
+    
+     public boolean eliminar(String id) {
+        if (cabeza == null) return false;
+
+        Nodo_admin actual = cabeza;
+
+        while (actual != null) {
+            if (actual.getDato().getDocumento().equals(id)) {
+
+                // CASO 1: es el único nodo
+                if (actual == cabeza && actual == cola) {
+                    cabeza = null;
+                    cola = null;
+                }
+                // CASO 2: eliminar cabeza
+                else if (actual == cabeza) {
+                    cabeza = cabeza.getSiguiente();
+                    cabeza.setAnterior(null);
+                }
+                // CASO 3: eliminar cola
+                else if (actual == cola) {
+                    cola = cola.getAnterior();
+                    cola.setSiguiente(null);
+                }
+                // CASO 4: nodo intermedio
+                else {
+                    actual.getAnterior().setSiguiente(actual.getSiguiente());
+                    actual.getSiguiente().setAnterior(actual.getAnterior());
+                }
+
+                tamano--;
+                return true;
+            }
+            actual = actual.getSiguiente();
+        }
+
+        return false;
+    }
+     
+     public boolean modificar(Cuenta_admin adminNuevo) {
+        Nodo_admin actual = cabeza;
+
+        while (actual != null) {
+            if (actual.getDato().getDocumento().equals(adminNuevo.getDocumento())) {
+                actual.setDato(adminNuevo);
+                return true;
+            }
+            actual = actual.getSiguiente();
+        }
+
+        return false;
+    }
+     
+     
 
     // MÉTODO PARA GSON
     public List<Cuenta_admin> getListaParaJson() {
@@ -57,5 +124,9 @@ public class Lista_admins {
 
     public int getTamano() {
         return tamano;
+    }
+
+    public Nodo_admin getCabeza() {
+        return cabeza;
     }
 }
