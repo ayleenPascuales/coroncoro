@@ -14,6 +14,7 @@ import java.util.List;
  * @author aylee
  */
 public class userController {
+
     private final UsuariosDAO usuarioDAO;
 
     public userController() {
@@ -33,7 +34,7 @@ public class userController {
         return null;
     }
 
-    public boolean registrarUsuario(String username, String password) {
+    public boolean registrarUsuario(String username, String password, String tipo_u) {
         // Verificar si ya existe
         List<Usuario> usuarios = usuarioDAO.cargarUsuarios();
         for (Usuario u : usuarios) {
@@ -41,7 +42,7 @@ public class userController {
                 return false; // usuario ya existe
             }
         }
-        Usuario nuevo = new Usuario(username, password);
+        Usuario nuevo = new Usuario(username, password, tipo_u);
         usuarioDAO.guardarUsuario(nuevo);
         return true;
     }
@@ -49,7 +50,6 @@ public class userController {
     public List<Usuario> listarUsuarios() {
         return usuarioDAO.cargarUsuarios();
     }
-
 
     public Usuario buscarUsuario(String id) {
         return usuarioDAO.buscarPorId(id);
@@ -61,5 +61,17 @@ public class userController {
 
     public boolean modificarUsuario(Usuario usuario) {
         return usuarioDAO.modificarUsuario(usuario);
+    }
+
+    // Agrega este método a tu userController.java
+    public boolean registrarUsuarioCompleto(Usuario nuevoUsuario) {
+        // Busca por Documento (asumiendo que es el ID clave en el DAO)
+        if (buscarUsuario(nuevoUsuario.getId_usuario()) != null) {
+            return false; // El Documento ya existe
+        }
+        // Opcional: Verificar si el username ya existe también si son diferentes
+
+        usuarioDAO.guardarUsuario(nuevoUsuario);
+        return true;
     }
 }

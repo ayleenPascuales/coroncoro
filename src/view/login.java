@@ -4,6 +4,8 @@
  */
 package view;
 
+import Controllers.userController;
+import Model.Usuario;
 import java.awt.Color;
 import javax.swing.*;
 import java.awt.event.*;
@@ -13,12 +15,14 @@ import java.awt.event.*;
  * @author aylee
  */
 public class login extends javax.swing.JFrame {
+
     private String[] images = {
         "/img/interior.jpg",
         "/img/cabaña.jpg",
         "/img/playa.jpg"
     };
     private int index = 0;
+
     /**
      * Creates new form login
      */
@@ -26,17 +30,17 @@ public class login extends javax.swing.JFrame {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        
+
         txtUsuario.setOpaque(false);
         txtUsuario.setBackground(new Color(0, 0, 0, 0));
         txtUsuario.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
         txtUsuario.setForeground(Color.BLACK);
-        
+
         txtContraseña.setOpaque(false);
         txtContraseña.setBackground(new Color(0, 0, 0, 0));
         txtContraseña.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
         txtContraseña.setForeground(Color.BLACK);
-        
+
         // Timer para cambiar imagen cada 2 segundos
         Timer timer = new Timer(2000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -45,13 +49,12 @@ public class login extends javax.swing.JFrame {
             }
         });
         timer.start();
-            
+
     }
-    
+
     private void updateImage() {
-    jLabel1.setIcon(new ImageIcon(getClass().getResource(images[index])));
+        jLabel1.setIcon(new ImageIcon(getClass().getResource(images[index])));
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -125,7 +128,7 @@ public class login extends javax.swing.JFrame {
                 btCrearActionPerformed(evt);
             }
         });
-        jPanel3.add(btCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 310, -1, -1));
+        jPanel3.add(btCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 320, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Ebrima", 3, 16)); // NOI18N
         jLabel7.setText("clik al siguiente boton");
@@ -177,6 +180,34 @@ public class login extends javax.swing.JFrame {
 
     private void btIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIngresarActionPerformed
         // TODO add your handling code here:
+        String usuarioIngresado = txtUsuario.getText();
+        String contraseñaIngresada = txtContraseña.getText();
+
+        if (usuarioIngresado.isEmpty() || contraseñaIngresada.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, complete ambos campos.", "Campos Vacíos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        userController controller = new userController();
+        Usuario usuarioLogueado = controller.login(usuarioIngresado, contraseñaIngresada);
+
+        // 5. Verificar el resultado
+        if (usuarioLogueado != null) {
+            // --- CASO DE ÉXITO ---
+            JOptionPane.showMessageDialog(this, "Bienvenido, " + usuarioLogueado.getUsuario());
+
+            // Abrir la ventana principal
+            menu_main menu = new menu_main();
+            menu.setVisible(true);
+
+            // Cerrar la ventana de login actual
+            this.dispose();
+
+        } else {
+            // --- CASO DE ERROR ---
+            // El método login devolvió null, significa que no encontró coincidencia
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error de Acceso", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btIngresarActionPerformed
 
     /**
@@ -205,12 +236,15 @@ public class login extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        try {
+            // Puedes elegir Dark (Oscuro) o Light (Claro)
+            UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatIntelliJLaf());
+        } catch (UnsupportedLookAndFeelException ex) {
+            System.err.println("Failed to initialize LaF");
+        }
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new login().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new login().setVisible(true);
         });
     }
 
