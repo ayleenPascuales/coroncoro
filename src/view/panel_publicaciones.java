@@ -106,7 +106,7 @@ public class panel_publicaciones extends javax.swing.JPanel {
         pais_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         panel_alojamientos.add(pais_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 70, 220, 30));
 
-        jPanel1.add(panel_alojamientos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 830, 180));
+        jPanel1.add(panel_alojamientos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 820, 180));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

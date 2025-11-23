@@ -25,10 +25,12 @@ public class userController {
         List<Usuario> usuarios = usuarioDAO.cargarUsuarios();
 
         for (Usuario u : usuarios) {
-            if (u.getUsuario().equals(username)
-                    && u.getContraseña().equals(password)) {
+            if (u.getUsuario() != null && u.getContraseña() != null) {
+            if (username.equals(u.getUsuario())
+                    && password.equals(u.getContraseña())) {
                 return u;
             }
+        }
         }
 
         return null;

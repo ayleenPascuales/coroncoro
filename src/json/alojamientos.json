@@ -1,23 +1,21 @@
 [
   {
+    "id_alojamiento": "1ac895c3-d230-46c7-8221-42b31ee68b25",
     "pais": "Colombia",
-    "ciudad": "Cartagena",
-    "barrio": "Bocagrande",
-    "direccion": "Carrera 3 #7-145",
-    "ubicacion": "Cerca a la playa Bocagrande y al Centro Comercial Nao",
-    "descripcion": "Apartamento moderno con vista parcial al mar...",
-    "capacidad_maxima": "6",
+    "ciudad": "Cartagena de Indias",
+    "barrio": "20 de julio",
+    "direccion": "calle 4 # 4-9",
+    "descripcion": "Espacioso y cómodo alojamiento, perfecto para unas vacaciones tranquilas",
+    "capacidad_maxima": "5",
     "num_habitaciones": "2",
     "num_baños": "2",
     "tipo_vivienda": "Apartamento",
     "fotos": [
-        "foto_apartamento_101.jpg",
-        "foto_apartamento_102.jpg",
-        "foto_apartamento_103.png"
+      "C:\\Users\\aylee\\Downloads\\burgerr.jpg"
     ],
     "disponibilidad": true,
     "piscina": true,
-    "parrilla": false,
+    "parrilla": true,
     "mascotas": true,
     "parques": true,
     "balcon": true,
@@ -25,6 +23,6 @@
     "personas_poca_movilidad": true,
     "vigilancia": true,
     "conjunto_cerrado": true,
-    "precio_noche": 280000
+    "precio_noche": 250.0
   }
 ]

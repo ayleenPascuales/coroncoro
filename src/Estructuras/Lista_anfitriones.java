@@ -43,7 +43,7 @@ public class Lista_anfitriones {
         Nodo_anfitrion actual = cabeza;
 
         while (actual != null) {
-            if (actual.getDato().getDocumento().equals(id)) {
+            if (actual.getDato().getDocumento() != null && actual.getDato().getDocumento().equals(id)) {
                 return actual.getDato();
             }
             actual = actual.getSiguiente();

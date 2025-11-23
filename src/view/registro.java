@@ -12,6 +12,8 @@ import Model.Alojamiento;
 import Model.Cuenta_Anfitrion;
 import Model.Cuenta_cliente;
 import Model.Usuario;
+import Model.dao.AlojamientoDAO;
+import Model.dao.AlojamientoDAOImpl;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
@@ -48,31 +50,38 @@ public class registro extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         cargarIdiomas();
         cargarPaisesDesdeAPI();
+        cargarComboTiposVivienda();
         actualizarCodigoTelefonoYValidar();
-
+        
+        //////////////////////////////////
+        
         datosPersonales.setVisible(false);
         datosVivienda.setVisible(false);
         extrasVivienda2.setVisible(false);
         extrasVivienda.setVisible(false);
         Continuar.setVisible(false);
         Volver_tipo.setVisible(false);
+        
+        taDescripcion.setLineWrap(true); 
+        taDescripcion.setWrapStyleWord(true);
 
         estilizarCampo(txtDocumento);
         estilizarCampo(txtNombre);
         estilizarCampo(txtApellido);
         estilizarCampo(codigo_telefono);
         estilizarCampo(txtEmail);
-        estilizarCampo(txtDireccion);
+        estilizarCampo(txtBarrio);
         estilizarCampo(txtUsuario);
         estilizarCampo(txtContraseña);
         estilizarCampo(txtPrecio);
-        estilizarCampo(txtBarrio);
+        estilizarCampo(txtBarrio_vivienda);
         estilizarCampo(txtDireccion_vivienda);
-        estilizarCampo(txtTelefono1);
+        estilizarCampo(txtTelefono);
+        estilizarCampo(txtDireccion);
 
-        pintarImagenEnPanel(jPanel8, "C:\\Users\\Boris Jimenez\\Documents\\NetBeansProjects\\coroncoro\\src\\img\\Huespedes.png");
-        pintarImagenEnPanel(jPanel9, "C:\\Users\\Boris Jimenez\\Documents\\NetBeansProjects\\coroncoro\\src\\img\\anfitrion.jpg");
-        pintarImagenEnPanel(volver_alogin, "C:\\Users\\Boris Jimenez\\Documents\\NetBeansProjects\\coroncoro\\src\\img\\flecha-hacia-atras.png");
+        pintarImagenEnPanel(jPanel8, "C:src\\img\\Huespedes.png");
+        pintarImagenEnPanel(jPanel9, "C:src\\img\\anfitrion.jpg");
+        pintarImagenEnPanel(volver_alogin, "src\\img\\flecha-hacia-atras.png");
 
         // Evento: cuando cambias país, cargar ciudades
         cbPais.addActionListener(new ActionListener() {
@@ -194,31 +203,86 @@ public class registro extends javax.swing.JFrame {
         }
     }
 
-    public void guardarFotos() {
-        if (fotosSeleccionadas == null || fotosSeleccionadas.length == 0) {
-            JOptionPane.showMessageDialog(this, "No hay fotos para guardar.");
-            return;
+    public void guardarFotos(Alojamiento alojamiento, File[] fotosSeleccionadas) {
+    if (fotosSeleccionadas == null || fotosSeleccionadas.length == 0) return;
+
+    File carpeta = new File("Fotografias");
+    if (!carpeta.exists()) carpeta.mkdir();
+
+    for (File foto : fotosSeleccionadas) {
+        try {
+            File destino = new File(carpeta, UUID.randomUUID() + "_" + foto.getName());
+            Files.copy(foto.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            // Asociar la ruta con el alojamiento
+            alojamiento.getFotos().add(destino.getPath());
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        File carpeta = new File("Fotografias");
+    // Guardar los cambios en JSON usando tu DAO
+    AlojamientoDAO dao = new AlojamientoDAOImpl();
+    dao.modificarAlojamiento(alojamiento);
+    }
+    
+    private Map<String, List<String>> obtenerTiposDeVivienda() {
+    Map<String, List<String>> datos = new LinkedHashMap<>();
 
-        if (!carpeta.exists()) {
-            carpeta.mkdir();
-        }
+    datos.put("Viviendas Clásicas", Arrays.asList(
+        "Casa", "Apartamento", "Apartaestudio", "Estudio",
+        "Habitación", "Loft", "Duplex", "Triplex",
+        "Penthouse", "Mansión", "Villa", "Residencia"
+    ));
 
-        for (File foto : fotosSeleccionadas) {
-            try {
-                File destino = new File(carpeta, foto.getName());
-                Files.copy(foto.toPath(), destino.toPath(),
-                        StandardCopyOption.REPLACE_EXISTING);
+    datos.put("Viviendas Turísticas", Arrays.asList(
+        "Cabaña", "Casa de playa", "Casa campestre", "Finca",
+        "Chalet", "Bungalow", "Carpa", "Glamping",
+        "Eco Lodge", "Hostal", "Hostel", "Hotel",
+        "Resort", "Casa rural", "Hacienda"
+    ));
 
-            } catch (Exception e) {
-                System.out.println("Error guardando foto: " + e);
+    datos.put("Viviendas Especiales", Arrays.asList(
+        "Tiny House", "Houseboat", "Barco casa", "Yate", 
+        "Caravana", "Motorhome", "Trailer",
+        "Container Home", "Modular Home", "Prefabricada"
+    ));
+
+    datos.put("Urbanas", Arrays.asList(
+        "Condominio", "Townhouse", "Torre residencial",
+        "Suite", "Microapartamento", "Miniloft"
+    ));
+
+    datos.put("Exóticas", Arrays.asList(
+        "Igloo", "Castillo", "Casa en el árbol",
+        "Tipi", "Yurta"
+    ));
+
+    return datos;
+    }
+    
+    private void cargarComboTiposVivienda() {
+
+        Map<String, List<String>> datos = obtenerTiposDeVivienda();
+        cbTipo_vivienda.removeAllItems(); // Limpia el combo
+        cbTipo_vivienda.addItem("Seleccione un tipo de vivienda");
+        
+        
+        for (String categoria : datos.keySet()) {
+        // Agregar categoría como separador visual
+        cbTipo_vivienda.addItem("----- " + categoria.toUpperCase() + " -----");
+        // Agregar tipos reales
+            for (String tipo : datos.get(categoria)) {
+                cbTipo_vivienda.addItem(tipo);
             }
         }
-
-        JOptionPane.showMessageDialog(this, "Fotos guardadas correctamente.");
     }
+    
+
+
+    
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -266,7 +330,7 @@ public class registro extends javax.swing.JFrame {
         txtDocumento = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         txtApellido = new javax.swing.JTextField();
-        txtDireccion = new javax.swing.JTextField();
+        txtBarrio = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
         txtUsuario = new javax.swing.JTextField();
         cbIdioma = new javax.swing.JComboBox<>();
@@ -276,7 +340,9 @@ public class registro extends javax.swing.JFrame {
         codigo_telefono = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         T_selected = new javax.swing.JLabel();
-        txtTelefono1 = new javax.swing.JTextField();
+        txtTelefono = new javax.swing.JTextField();
+        txtDireccion = new javax.swing.JTextField();
+        jLabel65 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel34 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -336,7 +402,7 @@ public class registro extends javax.swing.JFrame {
         jLabel25 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        txtBarrio = new javax.swing.JTextField();
+        txtBarrio_vivienda = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         txtDireccion_vivienda = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
@@ -366,7 +432,6 @@ public class registro extends javax.swing.JFrame {
         jLabel54 = new javax.swing.JLabel();
         jsBaños1 = new com.toedter.components.JSpinField();
         jLabel55 = new javax.swing.JLabel();
-        cbTipo_vivienda1 = new javax.swing.JComboBox<>();
         jLabel56 = new javax.swing.JLabel();
         Volver_tipo = new javax.swing.JLabel();
         datosPersonales = new javax.swing.JLabel();
@@ -394,10 +459,10 @@ public class registro extends javax.swing.JFrame {
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 38, Short.MAX_VALUE)
+            .addGap(0, 8, Short.MAX_VALUE)
         );
 
-        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 0, 700, 40));
+        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 0, 700, 10));
 
         Tipo.setBackground(new java.awt.Color(255, 255, 255));
         Tipo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -514,7 +579,7 @@ public class registro extends javax.swing.JFrame {
         jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 160, 20));
 
         txtContraseña.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
-        jPanel2.add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 160, 180, -1));
+        jPanel2.add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 300, 180, -1));
 
         jLabel7.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel7.setText("Ingrese su nombre:");
@@ -526,11 +591,11 @@ public class registro extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel9.setText("Ingrese su edad:");
-        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 60, 160, 20));
+        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 160, 20));
 
         jLabel10.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel10.setText("Ingrese su telefono:");
-        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 160, 20));
+        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, 160, 20));
 
         jLabel11.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel11.setText("Ingrese email:");
@@ -538,32 +603,32 @@ public class registro extends javax.swing.JFrame {
 
         jLabel13.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel13.setText("Ciudad donde vive:");
-        jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, 160, 20));
+        jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 130, 160, 20));
 
         jLabel14.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel14.setText("Ingrese su direccion:");
-        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 270, 160, 20));
+        jLabel14.setText("Ingrese su Barrio:");
+        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 200, 160, 20));
 
         jLabel15.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel15.setText("Fecha de nacimiento:");
-        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 200, 160, 20));
+        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 60, 160, 20));
 
         jLabel16.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel16.setText("Seleccione que idiomas habla:");
-        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 270, 210, 20));
+        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 130, 210, 20));
 
         jLabel18.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel18.setText("Pais donde vive:");
-        jPanel2.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 130, 160, 20));
+        jPanel2.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 60, 160, 20));
 
         jLabel19.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel19.setText("Ingrese su usuario:");
-        jPanel2.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 60, 160, 20));
+        jPanel2.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 200, 160, 20));
 
         jLabel20.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel20.setText("Ingrese su contraseña:");
-        jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 130, 160, 20));
-        jPanel2.add(jsEdad, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 180, -1));
+        jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 270, 160, 20));
+        jPanel2.add(jsEdad, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 180, -1));
 
         txtDocumento.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
         jPanel2.add(txtDocumento, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 180, -1));
@@ -574,36 +639,37 @@ public class registro extends javax.swing.JFrame {
         txtApellido.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
         jPanel2.add(txtApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, 180, -1));
 
-        txtDireccion.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
-        jPanel2.add(txtDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 300, 180, -1));
+        txtBarrio.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        jPanel2.add(txtBarrio, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 230, 180, -1));
 
         txtEmail.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
         jPanel2.add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 370, 180, -1));
 
         txtUsuario.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
-        jPanel2.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 90, 180, -1));
+        jPanel2.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 230, 180, -1));
 
-        jPanel2.add(cbIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 300, 180, -1));
+        jPanel2.add(cbIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 160, 180, -1));
 
         cbPais.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbPaisActionPerformed(evt);
             }
         });
-        jPanel2.add(cbPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 160, 180, -1));
-        jPanel2.add(jdNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 230, 180, -1));
+        jPanel2.add(cbPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 90, 180, -1));
+        jPanel2.add(jdNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 90, 180, -1));
 
         cbCiudad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbCiudadActionPerformed(evt);
             }
         });
-        jPanel2.add(cbCiudad, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 230, 180, -1));
+        jPanel2.add(cbCiudad, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 160, 180, -1));
 
         codigo_telefono.setEditable(false);
+        codigo_telefono.setBackground(new java.awt.Color(255, 255, 255));
         codigo_telefono.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
         codigo_telefono.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jPanel2.add(codigo_telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 50, -1));
+        jPanel2.add(codigo_telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 380, 50, -1));
 
         jLabel24.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel24.setText("DATOS PERSONALES");
@@ -612,13 +678,20 @@ public class registro extends javax.swing.JFrame {
         T_selected.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jPanel2.add(T_selected, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 20, 180, 20));
 
-        txtTelefono1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
-        txtTelefono1.addFocusListener(new java.awt.event.FocusAdapter() {
+        txtTelefono.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        txtTelefono.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                txtTelefono1FocusLost(evt);
+                txtTelefonoFocusLost(evt);
             }
         });
-        jPanel2.add(txtTelefono1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 300, 140, -1));
+        jPanel2.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 380, 140, -1));
+
+        txtDireccion.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        jPanel2.add(txtDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 300, 180, -1));
+
+        jLabel65.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel65.setText("Ingrese su direccion:");
+        jPanel2.add(jLabel65, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 270, 160, 20));
 
         jTabbedPane1.addTab("tab1", jPanel2);
 
@@ -863,13 +936,13 @@ public class registro extends javax.swing.JFrame {
         jLabel12.setText("Ciudad donde esta ubicada");
         jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 190, 20));
 
-        txtBarrio.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
-        txtBarrio.addActionListener(new java.awt.event.ActionListener() {
+        txtBarrio_vivienda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        txtBarrio_vivienda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBarrioActionPerformed(evt);
+                txtBarrio_viviendaActionPerformed(evt);
             }
         });
-        jPanel3.add(txtBarrio, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 180, -1));
+        jPanel3.add(txtBarrio_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 180, -1));
 
         jLabel17.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel17.setText("Barrio donde esta ubicada:");
@@ -906,7 +979,13 @@ public class registro extends javax.swing.JFrame {
         jLabel31.setText("numero de habitaciones:");
         jPanel3.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 190, 180, 20));
 
-        jPanel3.add(cbTipo_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 380, 170, -1));
+        cbTipo_vivienda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        cbTipo_vivienda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTipo_viviendaActionPerformed(evt);
+            }
+        });
+        jPanel3.add(cbTipo_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 380, 200, -1));
 
         jLabel32.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel32.setText("Precio por noche:");
@@ -961,8 +1040,6 @@ public class registro extends javax.swing.JFrame {
         jLabel55.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel55.setText("Tipo de vivienda:");
         jPanel3.add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 350, 130, 20));
-
-        jPanel3.add(cbTipo_vivienda1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 380, 170, -1));
 
         jLabel56.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel56.setText("Precio por noche:");
@@ -1077,17 +1154,23 @@ public class registro extends javax.swing.JFrame {
         } else if (T_selected.getText().equals("(ANFITRIÓN)")) {
             registrarAnfitrionCompleto();
         }
+        login logeo = new login();
+        logeo.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_ContinuarMouseClicked
 
     private boolean registrarHuesped() {
 
         // --- 1. CAPTURA DE DATOS ---
+        
         String documento = txtDocumento.getText().trim();
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
-        String telefono = codigo_telefono.getText().trim();
+        String codigo_pais = codigo_telefono.getText().trim();
+        String num_telefono = txtTelefono.getText().trim();
         String email = txtEmail.getText().trim();
-        String direccion = txtDireccion.getText().trim();
+        String barrio = txtBarrio.getText().trim();
+        String direccion = txtBarrio.getText().trim();
         String user = txtUsuario.getText().trim();
         String pass = txtContraseña.getText().trim();
 
@@ -1108,53 +1191,96 @@ public class registro extends javax.swing.JFrame {
         // =================================================================================
         // BLOQUE DE VALIDACIONES
         // =================================================================================
-        if (!documento.matches("\\d{7,10}") || documento.matches("0+")) {
-            JOptionPane.showMessageDialog(this, "El Documento debe ser válido (7-10 dígitos) y no puede ser ceros.", "Error en Documento", JOptionPane.WARNING_MESSAGE);
+        if (documento.isEmpty() || !documento.matches("\\d{7,10}") || documento.matches("0+")) {
+            JOptionPane.showMessageDialog(this, "El Documento es obligatorio, debe tener entre 7 y 10 dígitos y no puede ser solo ceros.",
+                "Error en Documento",
+            JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+
+        if (nombre.isEmpty() || !nombre.matches("[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+")) {
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio y no puede contener números ni caracteres especiales.", 
+                    "Error en Nombre",JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        if (!nombre.matches("[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+")) {
-            JOptionPane.showMessageDialog(this, "El Nombre no puede contener números ni caracteres especiales.", "Error en Nombre", JOptionPane.WARNING_MESSAGE);
+        if (apellido.isEmpty() || !apellido.matches("[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+")) {
+            JOptionPane.showMessageDialog(this, "El Apellido es obligatorio y no puede contener números ni caracteres especiales.", 
+                    "Error en Apellido",JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        if (apellido.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "El Apellido es obligatorio.", "Campos Vacíos", JOptionPane.WARNING_MESSAGE);
-            return false;
+        if (edadIngresada <= 0) {
+            JOptionPane.showMessageDialog(this,
+            "La edad no puede ser menor o igual a cero.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
+        return false;
         }
 
-        if (edadIngresada < 0) {
-            JOptionPane.showMessageDialog(this, "La edad no puede ser negativa.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
-            return false;
+        if (edadIngresada > 120) {
+            JOptionPane.showMessageDialog(this, "La edad ingresada no es válida.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
+        return false;
         }
-
-        if (fechaNacimiento == null) {
+        
+        if (jdNacimiento.getDate() == null) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de nacimiento.", "Error en Fecha", JOptionPane.WARNING_MESSAGE);
-            return false;
-        } else {
-            int edadCalculada = Period.between(fechaNacimiento, LocalDate.now()).getYears();
-
-            if (edadCalculada < 18) {
-                JOptionPane.showMessageDialog(this, "Debe ser mayor de 18 años para registrarse.", "Restricción de Edad", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-
-            if (edadCalculada != edadIngresada) {
-                JOptionPane.showMessageDialog(this,
-                        "Inconsistencia: La edad ingresada (" + edadIngresada + ") no coincide con la fecha de nacimiento (" + edadCalculada + " años).",
-                        "Error de Datos", JOptionPane.WARNING_MESSAGE);
-                return false;
-            }
+        return false;
+        }
+        
+        int edadCalculada = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+        if (edadCalculada < 18) {
+            JOptionPane.showMessageDialog(this, "Debe tener al menos 18 años para registrarse.", "Restricción de Edad", JOptionPane.ERROR_MESSAGE);
+        return false;
         }
 
-        if (!telefono.matches("3\\d{9}")) {
-            JOptionPane.showMessageDialog(this, "El teléfono debe ser un celular válido de Colombia (10 dígitos, empieza por 3).", "Error en Teléfono", JOptionPane.WARNING_MESSAGE);
-            return false;
+        if (edadIngresada != edadCalculada) {
+            JOptionPane.showMessageDialog(this, "Inconsistencia: La edad ingresada(" +edadIngresada+ ")no coincide con la calculada según la fecha de nacimiento "
+                    + "(" +edadCalculada + " años).", "Error de Datos", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (num_telefono.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El número de teléfono es obligatorio.", "Error en Teléfono", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (!num_telefono.matches("\\d{7,15}")) {
+            JOptionPane.showMessageDialog(this, "Ingrese un número válido (solo dígitos, entre 7 y 15).", "Error en Teléfono", JOptionPane.WARNING_MESSAGE);
+        return false;
         }
 
-        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-            JOptionPane.showMessageDialog(this, "Ingrese un correo electrónico válido (ej: usuario@dominio.com).", "Error en Email", JOptionPane.WARNING_MESSAGE);
-            return false;
+        if (email.isEmpty() || email.contains(" ")) {
+            JOptionPane.showMessageDialog(this,"El correo electrónico es obligatorio y el correo electrónico no puede contener espacios.", "Error en Email", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,10}$")) {
+            JOptionPane.showMessageDialog(this,"Ingrese un correo electrónico válido (ej: usuario@dominio.com).", "Error en Email", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (email.chars().filter(c -> c == '@').count() != 1 || email.startsWith("@") || email.endsWith("@")) {
+        JOptionPane.showMessageDialog(this, "El correo electrónico debe contener exactamente un símbolo '@' y no puede iniciar o terminar con '@'. ", "Error en Email", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (barrio.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El barrio es obligatorio.", "Error en Barrio", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+
+        if (!barrio.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s.-]+")) {
+            JOptionPane.showMessageDialog(this, "El nombre del barrio contiene caracteres no válidos.", "Error en Barrio", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (direccion.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "La dirección es obligatoria.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+
+        if (!direccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.-]+")) {
+            JOptionPane.showMessageDialog(this,"La dirección contiene caracteres no válidos.","Error en Dirección", JOptionPane.WARNING_MESSAGE);
+        return false;
         }
 
         String passwordRegex = "^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$";
@@ -1169,6 +1295,8 @@ public class registro extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "El nombre de Usuario es obligatorio.", "Campos Vacíos", JOptionPane.WARNING_MESSAGE);
             return false;
         }
+        
+        String telefonoCompleto = codigo_pais + num_telefono;
 
         // =================================================================================
         // VALIDACIÓN DE UNICIDAD Y GUARDADO
@@ -1195,15 +1323,13 @@ public class registro extends javax.swing.JFrame {
 
             // 3. CREAR Y GUARDAR CLIENTE (PERFIL)
             Cuenta_cliente nuevoCliente = new Cuenta_cliente(
-                    "",
-                    "",
                     nombre,
                     apellido,
                     documento,
                     String.valueOf(edadIngresada),
-                    telefono,
+                    telefonoCompleto,
                     email,
-                    "",
+                    barrio,
                     direccion,
                     fechaNacimiento,
                     idiomas,
@@ -1239,13 +1365,15 @@ public class registro extends javax.swing.JFrame {
         String documento = txtDocumento.getText().trim();
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
-        String telefono = codigo_telefono.getText().trim();
+        String codigo_pais = codigo_telefono.getText().trim();
+        String num_telefono = txtTelefono.getText().trim();
         String email = txtEmail.getText().trim();
-        String direccion = txtDireccion.getText().trim();
+        String barrio = txtBarrio.getText().trim();
+        String direccion = txtBarrio.getText().trim();
         String user = txtUsuario.getText().trim();
         String pass = txtContraseña.getText().trim();
 
-        // Combos Usuario
+        
         String ciudadVivienda = (cbCiudad.getSelectedItem() != null) ? cbCiudad.getSelectedItem().toString() : "";
         String idiomas = (cbIdioma.getSelectedItem() != null) ? cbIdioma.getSelectedItem().toString() : "Español";
 
@@ -1262,62 +1390,98 @@ public class registro extends javax.swing.JFrame {
         // =================================================================================
         // 3. VALIDACIONES DE DATOS PERSONALES (Importadas de RegistrarHuesped)
         // =================================================================================
-        // A. Documento
-        if (!documento.matches("\\d{7,10}") || documento.matches("0+")) {
-            JOptionPane.showMessageDialog(this, "El Documento debe ser válido (7-10 dígitos) y no puede ser ceros.", "Error en Documento", JOptionPane.WARNING_MESSAGE);
+        if (documento.isEmpty() || !documento.matches("\\d{7,10}") || documento.matches("0+")) {
+            JOptionPane.showMessageDialog(this, "El Documento es obligatorio, debe tener entre 7 y 10 dígitos y no puede ser solo ceros.",
+                "Error en Documento",
+            JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+
+        if (nombre.isEmpty() || !nombre.matches("[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+")) {
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio y no puede contener números ni caracteres especiales.", 
+                    "Error en Nombre",JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        // B. Nombre (Sin números ni caracteres especiales)
-        if (!nombre.matches("[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+")) {
-            JOptionPane.showMessageDialog(this, "El Nombre no puede contener números ni caracteres especiales.", "Error en Nombre", JOptionPane.WARNING_MESSAGE);
+        if (apellido.isEmpty() || !apellido.matches("[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+")) {
+            JOptionPane.showMessageDialog(this, "El Apellido es obligatorio y no puede contener números ni caracteres especiales.", 
+                    "Error en Apellido",JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        // C. Apellido
-        if (apellido.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "El Apellido es obligatorio.", "Campos Vacíos", JOptionPane.WARNING_MESSAGE);
-            return false;
+        if (edadIngresada <= 0) {
+            JOptionPane.showMessageDialog(this,
+            "La edad no puede ser menor o igual a cero.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
+        return false;
         }
 
-        // D. Validaciones de Edad y Fechas
-        if (edadIngresada < 0) {
-            JOptionPane.showMessageDialog(this, "La edad no puede ser negativa.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
-            return false;
+        if (edadIngresada > 120) {
+            JOptionPane.showMessageDialog(this, "La edad ingresada no es válida.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
+        return false;
         }
-
-        if (fechaNacimiento == null) {
+        
+        if (jdNacimiento.getDate() == null) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de nacimiento.", "Error en Fecha", JOptionPane.WARNING_MESSAGE);
-            return false;
-        } else {
-            int edadCalculada = java.time.Period.between(fechaNacimiento, LocalDate.now()).getYears();
-
-            if (edadCalculada < 18) {
-                JOptionPane.showMessageDialog(this, "Debe ser mayor de 18 años para registrarse como anfitrión.", "Restricción de Edad", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-
-            if (edadCalculada != edadIngresada) {
-                JOptionPane.showMessageDialog(this,
-                        "Inconsistencia: La edad ingresada (" + edadIngresada + ") no coincide con la fecha de nacimiento (" + edadCalculada + " años).",
-                        "Error de Datos", JOptionPane.WARNING_MESSAGE);
-                return false;
-            }
+        return false;
+        }
+        
+        int edadCalculada = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+        if (edadCalculada < 18) {
+            JOptionPane.showMessageDialog(this, "Debe tener al menos 18 años para registrarse.", "Restricción de Edad", JOptionPane.ERROR_MESSAGE);
+        return false;
         }
 
-        // E. Teléfono (Formato Colombia)
-        if (!telefono.matches("3\\d{9}")) {
-            JOptionPane.showMessageDialog(this, "El teléfono debe ser un celular válido de Colombia (10 dígitos, empieza por 3).", "Error en Teléfono", JOptionPane.WARNING_MESSAGE);
-            return false;
+        if (edadIngresada != edadCalculada) {
+            JOptionPane.showMessageDialog(this, "Inconsistencia: La edad ingresada(" +edadIngresada+ ")no coincide con la calculada según la fecha de nacimiento "
+                    + "(" +edadCalculada + " años).", "Error de Datos", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (num_telefono.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El número de teléfono es obligatorio.", "Error en Teléfono", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (!num_telefono.matches("\\d{7,15}")) {
+            JOptionPane.showMessageDialog(this, "Ingrese un número válido (solo dígitos, entre 7 y 15).", "Error en Teléfono", JOptionPane.WARNING_MESSAGE);
+        return false;
         }
 
-        // F. Email
-        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-            JOptionPane.showMessageDialog(this, "Ingrese un correo electrónico válido.", "Error en Email", JOptionPane.WARNING_MESSAGE);
-            return false;
+        if (email.isEmpty() || email.contains(" ")) {
+            JOptionPane.showMessageDialog(this,"El correo electrónico es obligatorio y el correo electrónico no puede contener espacios.", "Error en Email", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,10}$")) {
+            JOptionPane.showMessageDialog(this,"Ingrese un correo electrónico válido (ej: usuario@dominio.com).", "Error en Email", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (email.chars().filter(c -> c == '@').count() != 1 || email.startsWith("@") || email.endsWith("@")) {
+        JOptionPane.showMessageDialog(this, "El correo electrónico debe contener exactamente un símbolo '@' y no puede iniciar o terminar con '@'. ", "Error en Email", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (barrio.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El barrio es obligatorio.", "Error en Barrio", JOptionPane.WARNING_MESSAGE);
+        return false;
         }
 
-        // G. Contraseña Segura
+        if (!barrio.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s.-]+")) {
+            JOptionPane.showMessageDialog(this, "El nombre del barrio contiene caracteres no válidos.", "Error en Barrio", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        if (direccion.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "La dirección es obligatoria.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+
+        if (!direccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.-]+")) {
+            JOptionPane.showMessageDialog(this,"La dirección contiene caracteres no válidos.","Error en Dirección", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+
         String passwordRegex = "^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$";
         if (!pass.matches(passwordRegex)) {
             JOptionPane.showMessageDialog(this,
@@ -1325,12 +1489,13 @@ public class registro extends javax.swing.JFrame {
                     "Contraseña Insegura", JOptionPane.WARNING_MESSAGE);
             return false;
         }
-
-        // H. Usuario Obligatorio
+        
         if (user.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre de Usuario es obligatorio.", "Campos Vacíos", JOptionPane.WARNING_MESSAGE);
             return false;
         }
+        
+        String telefonoCompleto = codigo_pais + num_telefono;
 
         // =================================================================================
         // 4. CAPTURA DE DATOS ALOJAMIENTO
@@ -1338,7 +1503,7 @@ public class registro extends javax.swing.JFrame {
         // Ubicación
         String alojPais = (cbPais_vivienda.getSelectedItem() != null) ? cbPais_vivienda.getSelectedItem().toString() : "";
         String alojCiudad = (cbCiudad_vivienda.getSelectedItem() != null) ? cbCiudad_vivienda.getSelectedItem().toString() : "";
-        String alojBarrio = txtBarrio.getText().trim();
+        String alojBarrio = txtBarrio_vivienda.getText().trim();
         String alojDireccion = txtDireccion_vivienda.getText().trim();
         String alojDescripcion = taDescripcion.getText().trim();
 
@@ -1352,7 +1517,7 @@ public class registro extends javax.swing.JFrame {
         String numHabitaciones = String.valueOf(valHabitaciones);
         String numBanos = String.valueOf(valBanos);
 
-        String tipoVivienda = (cbTipo_vivienda.getSelectedItem() != null) ? cbTipo_vivienda.getSelectedItem().toString() : "Casa";
+        String tipoVivienda = ((String) cbTipo_vivienda.getSelectedItem());
 
         // Precio
         double alojPrecio = 0;
@@ -1374,18 +1539,38 @@ public class registro extends javax.swing.JFrame {
         boolean tieneVigilancia = esSi(cb_vigilancia);
         boolean tieneConjunto = esSi(cbConjunto);
 
-        boolean disponible = true;
+            boolean disponible = true;
 
         // =================================================================================
         // 5. VALIDACIONES LÓGICAS DEL ALOJAMIENTO (NUEVAS)
         // =================================================================================
-        // I. Ubicación Completa
-        if (alojPais.isEmpty() || alojPais.equals("Seleccione") || alojCiudad.isEmpty() || alojDireccion.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Debe completar la ubicación del alojamiento (País, Ciudad y Dirección).", "Ubicación Incompleta", JOptionPane.WARNING_MESSAGE);
+        // Ubicación Completa
+        if (alojPais.isEmpty() || alojPais.equals("Seleccione") || alojCiudad.isEmpty() || alojDireccion.isEmpty() || alojBarrio.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe completar la ubicación del alojamiento (País, Ciudad, Barrio y Dirección).", "Ubicación Incompleta", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        // J. Cantidades Positivas (Capacidad, Habitaciones, Baños)
+        if (!alojBarrio.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s.-]+")) {
+            JOptionPane.showMessageDialog(this, "El nombre del barrio contiene caracteres no válidos.", "Error en Barrio", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+
+        if (!alojDireccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.-]+")) {
+            JOptionPane.showMessageDialog(this,"La dirección contiene caracteres no válidos.","Error en Dirección", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        //VALIDAR DESCRIPCION
+        if (alojDescripcion.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "La descripción no puede estar vacía.", "Error", JOptionPane.ERROR_MESSAGE);
+        return false;
+        }   
+        if (alojDescripcion.length() < 20 && alojDescripcion.length() > 500) {
+            JOptionPane.showMessageDialog(this, "La descripción debe tener como minimo 20 caracteres y como maximo 500 caracteres", "Error en la descripción", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
+        // Cantidades Positivas (Capacidad, Habitaciones, Baños)
         if (valCapacidad <= 0) {
             JOptionPane.showMessageDialog(this, "La capacidad máxima debe ser al menos 1 persona.", "Error en Capacidad", JOptionPane.WARNING_MESSAGE);
             return false;
@@ -1408,6 +1593,14 @@ public class registro extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "El precio máximo permitido es de $100,000 COP.", "Precio Excedido", JOptionPane.WARNING_MESSAGE);
             return false;
         }
+        
+      if (cbTipo_vivienda == null || cbTipo_vivienda.equals("Seleccione un tipo de vivienda")){
+        JOptionPane.showMessageDialog(this,
+            "Debe seleccionar un tipo de vivienda válido.",
+            "Error en Tipo de Vivienda",
+            JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
 
         // =================================================================================
         // 6. GUARDADO Y PERSISTENCIA
@@ -1430,16 +1623,26 @@ public class registro extends javax.swing.JFrame {
 
             // 2. Crear Perfil Anfitrión
             Cuenta_Anfitrion nuevoAnfitrion = new Cuenta_Anfitrion(
-                    LocalDate.now(), true, "0.0", "COP", "Español",
-                    nombre, apellido, documento, String.valueOf(edadIngresada), telefono, email,
-                    "", // Barrio Persona
-                    direccion, fechaNacimiento, idiomas, ciudadVivienda
+                    LocalDate.now(),//fecha inicio
+                    true, // estado bloqueado o no
+                    "0.0", //calificacion
+                    nombre,
+                    apellido, 
+                    documento, 
+                    String.valueOf(edadIngresada), 
+                    telefonoCompleto, 
+                    email,
+                    barrio, // Barrio Persona
+                    direccion, 
+                    fechaNacimiento, 
+                    idiomas, 
+                    ciudadVivienda
             );
 
             // 3. Crear Alojamiento
             Alojamiento nuevoAlojamiento = new Alojamiento(
                     documento, // ID Dueño
-                    alojPais, alojCiudad, alojBarrio, alojDireccion, alojDireccion, alojDescripcion,
+                    alojPais, alojCiudad, alojBarrio, alojDireccion, alojDescripcion,
                     capacidad, numHabitaciones, numBanos, tipoVivienda,
                     rutasMultiplesArchivos,
                     disponible,
@@ -1480,9 +1683,7 @@ public class registro extends javax.swing.JFrame {
         campo.setForeground(java.awt.Color.BLACK); // O negro dependiendo del panel
     }
 
-// =========================================================
-// NO OLVIDES ESTE MÉTODO AUXILIAR AL FINAL DE TU CLASE
-// =========================================================
+        //METODO PARA LOS COMBO DE TRUE O FALSE
     private boolean esSi(javax.swing.JComboBox<String> combo) {
         if (combo.getSelectedItem() == null) {
             return false;
@@ -1502,14 +1703,14 @@ public class registro extends javax.swing.JFrame {
      */
     private void actualizarCodigoTelefonoYValidar() {
         String paisSeleccionado = (cbPais.getSelectedItem() != null) ? cbPais.getSelectedItem().toString() : "";
-        String numeroTelefono = txtTelefono1.getText().trim();
+        String numeroTelefono = txtTelefono.getText().trim();
 
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 
         // Si no hay país seleccionado o es la opción por defecto
         if (paisSeleccionado.isEmpty() || paisSeleccionado.equals("Seleccione un país")) {
             codigo_telefono.setText("");
-            txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY));
+            txtTelefono.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY));
             return;
         }
 
@@ -1520,7 +1721,7 @@ public class registro extends javax.swing.JFrame {
 
         if (codigoRegion == null || codigoRegion.isEmpty()) {
             codigo_telefono.setText("?"); // Si no encontramos el código ISO, mostrar interrogación
-            txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED));
+            txtTelefono.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED));
             return;
         }
 
@@ -1539,19 +1740,19 @@ public class registro extends javax.swing.JFrame {
                 PhoneNumber phoneNumber = phoneUtil.parse(numeroTelefono, codigoRegion);
 
                 if (phoneUtil.isValidNumber(phoneNumber) && phoneUtil.isValidNumberForRegion(phoneNumber, codigoRegion)) {
-                    txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.GREEN)); // Válido
+                    txtTelefono.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.GREEN)); // Válido
                     // Opcional: formatear el número para mostrarlo estándar
                     // txtTelefono.setText(phoneUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL));
                 } else {
-                    txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED)); // Inválido
+                    txtTelefono.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED)); // Inválido
                     JOptionPane.showMessageDialog(this, "El número de teléfono no es válido para " + paisSeleccionado + ".", "Formato Incorrecto", JOptionPane.WARNING_MESSAGE);
                 }
             } catch (NumberParseException e) {
-                txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED)); // Error de parseo
+                txtTelefono.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED)); // Error de parseo
                 JOptionPane.showMessageDialog(this, "El número de teléfono no tiene un formato reconocido.", "Error de Formato", JOptionPane.WARNING_MESSAGE);
             }
         } else {
-            txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)); // Vacío, estado normal
+            txtTelefono.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)); // Vacío, estado normal
         }
     }
 
@@ -1674,17 +1875,17 @@ public class registro extends javax.swing.JFrame {
 
     private void datosViviendaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_datosViviendaMouseClicked
         // TODO add your handling code here:
-        jTabbedPane1.setSelectedIndex(2);
+        jTabbedPane1.setSelectedIndex(3);
     }//GEN-LAST:event_datosViviendaMouseClicked
 
     private void extrasViviendaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_extrasViviendaMouseClicked
         // TODO add your handling code here:
-        jTabbedPane1.setSelectedIndex(3);
+        jTabbedPane1.setSelectedIndex(2);
     }//GEN-LAST:event_extrasViviendaMouseClicked
 
     private void extrasVivienda2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_extrasVivienda2MouseClicked
         // TODO add your handling code here:
-        jTabbedPane1.setSelectedIndex(2);
+        jTabbedPane1.setSelectedIndex(3);
     }//GEN-LAST:event_extrasVivienda2MouseClicked
 
     private void Fotos1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Fotos1MouseClicked
@@ -1718,9 +1919,9 @@ public class registro extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDireccion_viviendaActionPerformed
 
-    private void txtBarrioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBarrioActionPerformed
+    private void txtBarrio_viviendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBarrio_viviendaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtBarrioActionPerformed
+    }//GEN-LAST:event_txtBarrio_viviendaActionPerformed
 
     private void volver_aloginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volver_aloginMouseClicked
         // TODO add your handling code here:
@@ -1747,7 +1948,7 @@ public class registro extends javax.swing.JFrame {
     private void cbPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPaisActionPerformed
         // TODO add your handling code here:
         actualizarCodigoTelefonoYValidar();
-        estilizarCampo(txtTelefono1);
+        estilizarCampo(txtTelefono);
     }//GEN-LAST:event_cbPaisActionPerformed
 
     private void cbCiudadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCiudadActionPerformed
@@ -1755,10 +1956,14 @@ public class registro extends javax.swing.JFrame {
 
     }//GEN-LAST:event_cbCiudadActionPerformed
 
-    private void txtTelefono1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelefono1FocusLost
+    private void txtTelefonoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelefonoFocusLost
         // TODO add your handling code here:
         actualizarCodigoTelefonoYValidar();
-    }//GEN-LAST:event_txtTelefono1FocusLost
+    }//GEN-LAST:event_txtTelefonoFocusLost
+
+    private void cbTipo_viviendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipo_viviendaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbTipo_viviendaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1826,7 +2031,6 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbPiscina;
     private javax.swing.JComboBox<String> cbPiscina1;
     private javax.swing.JComboBox<String> cbTipo_vivienda;
-    private javax.swing.JComboBox<String> cbTipo_vivienda1;
     private javax.swing.JComboBox<String> cb_movilidad;
     private javax.swing.JComboBox<String> cb_movilidad1;
     private javax.swing.JComboBox<String> cb_vigilancia;
@@ -1894,6 +2098,7 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel62;
     private javax.swing.JLabel jLabel63;
     private javax.swing.JLabel jLabel64;
+    private javax.swing.JLabel jLabel65;
     private javax.swing.JLabel jLabel66;
     private javax.swing.JLabel jLabel67;
     private javax.swing.JLabel jLabel68;
@@ -1937,6 +2142,7 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JTextArea taDescripcion1;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtBarrio;
+    private javax.swing.JTextField txtBarrio_vivienda;
     private javax.swing.JTextField txtContraseña;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtDireccion_vivienda;
@@ -1944,7 +2150,7 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecio;
-    private javax.swing.JTextField txtTelefono1;
+    private javax.swing.JTextField txtTelefono;
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JPanel volver_alogin;
     // End of variables declaration//GEN-END:variables

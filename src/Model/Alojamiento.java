@@ -9,7 +9,6 @@ public class Alojamiento {
     private String ciudad;
     private String barrio;
     private String direccion;
-    private String ubicacion;
     private String descripcion;
     private String capacidad_maxima;
     private String num_habitaciones;
@@ -28,13 +27,13 @@ public class Alojamiento {
     private boolean conjunto_cerrado;
     private double precio_noche;
 
-    public Alojamiento(String id_alojamiento, String pais, String ciudad, String barrio, String direccion, String ubicacion, String descripcion, String capacidad_maxima, String num_habitaciones, String num_baños, String tipo_vivienda, List<String> fotos, boolean disponibilidad, boolean piscina, boolean parrilla, boolean mascotas, boolean parques, boolean balcon, boolean agua_caliente, boolean personas_poca_movilidad, boolean vigilancia, boolean conjunto_cerrado, double precio_noche) {
+    public Alojamiento(String id_alojamiento, String pais, String ciudad, String barrio, String direccion, String descripcion, String capacidad_maxima, String num_habitaciones, String num_baños, String tipo_vivienda, List<String> fotos, boolean disponibilidad, boolean piscina, boolean parrilla, boolean mascotas, boolean parques, boolean balcon, boolean agua_caliente, boolean personas_poca_movilidad, boolean vigilancia, boolean conjunto_cerrado, double precio_noche) {
         this.id_alojamiento = UUID.randomUUID().toString();
         this.pais = pais;
         this.ciudad = ciudad;
         this.barrio = barrio;
         this.direccion = direccion;
-        this.ubicacion = ubicacion;
+
         this.descripcion = descripcion;
         this.capacidad_maxima = capacidad_maxima;
         this.num_habitaciones = num_habitaciones;
@@ -92,14 +91,6 @@ public class Alojamiento {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
-    }
-
-    public String getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
     }
 
     public String getDescripcion() {

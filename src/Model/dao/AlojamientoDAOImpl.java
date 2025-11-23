@@ -85,5 +85,15 @@ public class AlojamientoDAOImpl implements AlojamientoDAO {
         if (mod) guardarEnJson();
         return mod;
     }
+    @Override
+    public List<Alojamiento> cargarDisponibles() {
+    List<Alojamiento> disponibles = new ArrayList<>();
+    for (Alojamiento a : cargarAlojamientos()) {
+        if (a.isDisponibilidad()) {
+            disponibles.add(a);
+        }
+    }
+    return disponibles;
+}
 }
 

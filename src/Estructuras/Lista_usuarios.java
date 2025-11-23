@@ -43,7 +43,7 @@ public class Lista_usuarios {
         Nodo_usuarios actual = cabeza;
 
         while (actual != null) {
-            if (actual.getDato().getId_usuario().equals(id)) {
+            if (id.equals(actual.getDato().getId_usuario())) {
                 return actual.getDato();
             }
             actual = actual.getSiguiente();

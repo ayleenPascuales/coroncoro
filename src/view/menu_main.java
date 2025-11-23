@@ -4,7 +4,11 @@
  */
 package view;
 
+import Model.Alojamiento;
+import Model.dao.AlojamientoDAO;
+import Model.dao.AlojamientoDAOImpl;
 import java.awt.Dimension;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -15,6 +19,8 @@ import javax.swing.SwingUtilities;
  * @author aylee
  */
 public class menu_main extends javax.swing.JFrame {
+    
+    private AlojamientoDAO dao;
 
     /**
      * Creates new form login_main
@@ -22,7 +28,8 @@ public class menu_main extends javax.swing.JFrame {
     public menu_main() {
         initComponents();
         setLocationRelativeTo(null);
-        //cargarPublicaciones();
+        dao = new AlojamientoDAOImpl(); // inicializa tu DAO
+        cargarPublicaciones(); 
         panel_menu_extendido.setVisible(false);
         panel_menu_recojido.setVisible(true);     
     }
@@ -49,30 +56,34 @@ public class menu_main extends javax.swing.JFrame {
     }).start();
     }
    
-   /*private void cargarPublicaciones() {
+    private void cargarPublicaciones() {
+        panel_inicio.removeAll(); // limpia el panel
 
-    panel_publicaciones.setLayout(new BoxLayout(panel_publicaciones, BoxLayout.Y_AXIS));
+        List<Alojamiento> listaDeAlojamientos = dao.cargarAlojamientos();
 
-    for (Publicacion p : listaPublicaciones) {
+        for (Alojamiento a : listaDeAlojamientos) {
+            panel_publicaciones pub = new panel_publicaciones();
 
-        panel_publicaciones publicacion = new panel_publicaciones(); // tu panel diseñado
+            pub.setTitulo(a.getDescripcion());
+            pub.setPrecio("$" + a.getPrecio_noche());
+            pub.setPais(a.getPais());
+            pub.setCiudad(a.getCiudad());
+            pub.setBarrio(a.getBarrio());
+            pub.setDireccion(a.getDireccion());
 
-        // LE PASAMOS LOS DATOS A LA CARD
-        publicacion.setTitulo(p.getTitulo());
-        publicacion.setPrecio(p.getPrecio());
-        publicacion.setPais(p.getPais());
-        publicacion.setCiudad(p.getCiudad());
-        publicacion.setBarrio(p.getBarrio());
-        publicacion.setDireccion(p.getDireccion());
-        publicacion.setImagen(p.getRutaImagen());
+            if (!a.getFotos().isEmpty()) {
+                pub.setImagen(a.getFotos().get(0));
+            }
 
-        panel_publicaciones.add(card);
-        panel_publicaciones.add(Box.createVerticalStrut(10));
+            panel_inicio.add(pub);
+            panel_inicio.add(Box.createVerticalStrut(10));
+        }
+
+        panel_inicio.revalidate();
+        panel_inicio.repaint();
     }
-
-    panel_publicaciones.revalidate();
-    panel_publicaciones.repaint();
-    }*/
+   
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -94,10 +105,10 @@ public class menu_main extends javax.swing.JFrame {
         reservas = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        panel_crear_publicaciones = new javax.swing.JPanel();
+        panel_cbandeja = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jPanel4 = new javax.swing.JPanel();
-        panel_bandeja = new javax.swing.JPanel();
+        panel_inicio = new javax.swing.JPanel();
+        panel_crear = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel14 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -227,30 +238,30 @@ public class menu_main extends javax.swing.JFrame {
 
         jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
 
-        panel_crear_publicaciones.setBackground(new java.awt.Color(255, 255, 255));
-        panel_crear_publicaciones.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panel_cbandeja.setBackground(new java.awt.Color(255, 255, 255));
+        panel_cbandeja.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        panel_inicio.setBackground(new java.awt.Color(255, 255, 255));
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panel_inicioLayout = new javax.swing.GroupLayout(panel_inicio);
+        panel_inicio.setLayout(panel_inicioLayout);
+        panel_inicioLayout.setHorizontalGroup(
+            panel_inicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 828, Short.MAX_VALUE)
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panel_inicioLayout.setVerticalGroup(
+            panel_inicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 558, Short.MAX_VALUE)
         );
 
-        jScrollPane3.setViewportView(jPanel4);
+        jScrollPane3.setViewportView(panel_inicio);
 
-        panel_crear_publicaciones.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 830, 560));
+        panel_cbandeja.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 830, 560));
 
-        jTabbedPane1.addTab("tab1", panel_crear_publicaciones);
+        jTabbedPane1.addTab("tab1", panel_cbandeja);
 
-        panel_bandeja.setBackground(new java.awt.Color(255, 255, 255));
-        panel_bandeja.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panel_crear.setBackground(new java.awt.Color(255, 255, 255));
+        panel_crear.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel14.setBackground(new java.awt.Color(255, 255, 255));
         jPanel14.setPreferredSize(new java.awt.Dimension(828, 775));
@@ -435,9 +446,9 @@ public class menu_main extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(jPanel14);
 
-        panel_bandeja.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 830, 560));
+        panel_crear.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 830, 560));
 
-        jTabbedPane1.addTab("tab2", panel_bandeja);
+        jTabbedPane1.addTab("tab2", panel_crear);
 
         panel_mis_publicaciones.setBackground(new java.awt.Color(255, 255, 255));
         panel_mis_publicaciones.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -643,7 +654,6 @@ public class menu_main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -658,9 +668,10 @@ public class menu_main extends javax.swing.JFrame {
     private javax.swing.JLabel lbVista_Previa;
     private javax.swing.JPanel menu;
     private javax.swing.JLabel mis_publicaciones;
-    private javax.swing.JPanel panel_bandeja;
-    private javax.swing.JPanel panel_crear_publicaciones;
+    private javax.swing.JPanel panel_cbandeja;
+    private javax.swing.JPanel panel_crear;
     private javax.swing.JPanel panel_favoritos;
+    private javax.swing.JPanel panel_inicio;
     private javax.swing.JPanel panel_menu_extendido;
     private javax.swing.JPanel panel_menu_recojido;
     private javax.swing.JPanel panel_mis_publicaciones;

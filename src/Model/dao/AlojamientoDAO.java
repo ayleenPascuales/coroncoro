@@ -19,5 +19,6 @@ public interface AlojamientoDAO {
     Alojamiento BuscarPorId(String id);
     boolean eliminarAlojamiento(String id);
     boolean modificarAlojamiento(Alojamiento alojamientos);
+    public List<Alojamiento> cargarDisponibles();
     
 }

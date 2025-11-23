@@ -1,20 +1,5 @@
 [
     {
-  "fecha_inicio": "2023-07-15",
-  "estado": true,
-  "calificacion": "4.7",
-  "monedaPref": "COP",
-  "idiomaPref": "ES",
-  "nombre": "Sebastián",
-  "apellido": "Lozano",
-  "documento": "1039874521",
-  "edad": "29",
-  "telefono": "3009874521",
-  "email": "sebastian.lozano@example.com",
-  "Barrio": "Bocagrande",
-  "direccion": "Avenida San Martín # 8-72",
-  "fecha_nacimiento": "1995-11-03",
-  "idiomas": "Español, Inglés",
-  "ciudad_vivienda": "Cartagena"
+  
 }
 ]
