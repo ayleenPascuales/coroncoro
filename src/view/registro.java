@@ -12,6 +12,9 @@ import Model.Alojamiento;
 import Model.Cuenta_Anfitrion;
 import Model.Cuenta_cliente;
 import Model.Usuario;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import java.awt.Image;
 import javax.swing.*;
 import java.awt.event.*;
@@ -45,17 +48,19 @@ public class registro extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         cargarIdiomas();
         cargarPaisesDesdeAPI();
+        actualizarCodigoTelefonoYValidar();
 
         datosPersonales.setVisible(false);
         datosVivienda.setVisible(false);
         extrasVivienda2.setVisible(false);
         extrasVivienda.setVisible(false);
         Continuar.setVisible(false);
+        Volver_tipo.setVisible(false);
 
         estilizarCampo(txtDocumento);
         estilizarCampo(txtNombre);
         estilizarCampo(txtApellido);
-        estilizarCampo(txtTelefono);
+        estilizarCampo(codigo_telefono);
         estilizarCampo(txtEmail);
         estilizarCampo(txtDireccion);
         estilizarCampo(txtUsuario);
@@ -63,11 +68,12 @@ public class registro extends javax.swing.JFrame {
         estilizarCampo(txtPrecio);
         estilizarCampo(txtBarrio);
         estilizarCampo(txtDireccion_vivienda);
-        
-                
+        estilizarCampo(txtTelefono1);
+
         pintarImagenEnPanel(jPanel8, "C:\\Users\\Boris Jimenez\\Documents\\NetBeansProjects\\coroncoro\\src\\img\\Huespedes.png");
         pintarImagenEnPanel(jPanel9, "C:\\Users\\Boris Jimenez\\Documents\\NetBeansProjects\\coroncoro\\src\\img\\anfitrion.jpg");
-        
+        pintarImagenEnPanel(volver_alogin, "C:\\Users\\Boris Jimenez\\Documents\\NetBeansProjects\\coroncoro\\src\\img\\flecha-hacia-atras.png");
+
         // Evento: cuando cambias país, cargar ciudades
         cbPais.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -240,6 +246,7 @@ public class registro extends javax.swing.JFrame {
         jLabel77 = new javax.swing.JLabel();
         jLabel78 = new javax.swing.JLabel();
         jLabel79 = new javax.swing.JLabel();
+        volver_alogin = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         txtContraseña = new javax.swing.JTextField();
@@ -266,9 +273,10 @@ public class registro extends javax.swing.JFrame {
         cbPais = new javax.swing.JComboBox<>();
         jdNacimiento = new com.toedter.calendar.JDateChooser();
         cbCiudad = new javax.swing.JComboBox<>();
-        txtTelefono = new javax.swing.JTextField();
+        codigo_telefono = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         T_selected = new javax.swing.JLabel();
+        txtTelefono1 = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jLabel34 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -360,6 +368,7 @@ public class registro extends javax.swing.JFrame {
         jLabel55 = new javax.swing.JLabel();
         cbTipo_vivienda1 = new javax.swing.JComboBox<>();
         jLabel56 = new javax.swing.JLabel();
+        Volver_tipo = new javax.swing.JLabel();
         datosPersonales = new javax.swing.JLabel();
         datosVivienda = new javax.swing.JLabel();
         extrasVivienda2 = new javax.swing.JLabel();
@@ -367,6 +376,7 @@ public class registro extends javax.swing.JFrame {
         Continuar = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
+        datosPersonales1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -394,7 +404,7 @@ public class registro extends javax.swing.JFrame {
 
         jLabel69.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel69.setText("cualquier rincón del mundo .");
-        Tipo.add(jLabel69, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 410, 280, -1));
+        Tipo.add(jLabel69, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 410, 280, -1));
 
         jLabel70.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel70.setText("ANFITRION");
@@ -448,31 +458,51 @@ public class registro extends javax.swing.JFrame {
 
         jLabel73.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel73.setText("estadía una historia para recordar");
-        Tipo.add(jLabel73, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 410, 330, -1));
+        Tipo.add(jLabel73, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 410, 330, -1));
 
         jLabel74.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel74.setText(" Tu próxima aventura te espera,");
-        Tipo.add(jLabel74, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 350, 310, -1));
+        Tipo.add(jLabel74, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 310, -1));
 
         jLabel75.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel75.setText("encuentra tu hogar temporal en");
-        Tipo.add(jLabel75, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 380, 320, -1));
+        Tipo.add(jLabel75, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, 320, -1));
 
         jLabel76.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel76.setText("Explora sin límites.");
-        Tipo.add(jLabel76, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 320, 190, -1));
+        Tipo.add(jLabel76, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 320, 190, -1));
 
         jLabel77.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel77.setText("Sé parte de la aventura. ");
-        Tipo.add(jLabel77, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 320, 300, -1));
+        Tipo.add(jLabel77, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 320, 300, -1));
 
         jLabel78.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel78.setText("Brinda comodidad y seguridad a");
-        Tipo.add(jLabel78, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 350, 310, -1));
+        Tipo.add(jLabel78, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 350, 310, -1));
 
         jLabel79.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel79.setText("quienes buscan explorar, y haz de su ");
-        Tipo.add(jLabel79, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 380, 360, -1));
+        Tipo.add(jLabel79, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 380, 360, -1));
+
+        volver_alogin.setToolTipText("Volver al login");
+        volver_alogin.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                volver_aloginMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout volver_aloginLayout = new javax.swing.GroupLayout(volver_alogin);
+        volver_alogin.setLayout(volver_aloginLayout);
+        volver_aloginLayout.setHorizontalGroup(
+            volver_aloginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
+        volver_aloginLayout.setVerticalGroup(
+            volver_aloginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
+
+        Tipo.add(volver_alogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 10, 40, 40));
 
         jTabbedPane1.addTab("Tipo", Tipo);
 
@@ -555,13 +585,25 @@ public class registro extends javax.swing.JFrame {
 
         jPanel2.add(cbIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 300, 180, -1));
 
+        cbPais.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbPaisActionPerformed(evt);
+            }
+        });
         jPanel2.add(cbPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 160, 180, -1));
         jPanel2.add(jdNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 230, 180, -1));
 
+        cbCiudad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCiudadActionPerformed(evt);
+            }
+        });
         jPanel2.add(cbCiudad, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 230, 180, -1));
 
-        txtTelefono.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
-        jPanel2.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 180, -1));
+        codigo_telefono.setEditable(false);
+        codigo_telefono.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        codigo_telefono.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jPanel2.add(codigo_telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 50, -1));
 
         jLabel24.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel24.setText("DATOS PERSONALES");
@@ -569,6 +611,14 @@ public class registro extends javax.swing.JFrame {
 
         T_selected.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jPanel2.add(T_selected, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 20, 180, 20));
+
+        txtTelefono1.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        txtTelefono1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTelefono1FocusLost(evt);
+            }
+        });
+        jPanel2.add(txtTelefono1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 300, 140, -1));
 
         jTabbedPane1.addTab("tab1", jPanel2);
 
@@ -922,6 +972,16 @@ public class registro extends javax.swing.JFrame {
 
         jPanel1.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 0, 700, 500));
 
+        Volver_tipo.setFont(new java.awt.Font("Ebrima", 3, 19)); // NOI18N
+        Volver_tipo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/flecha-hacia-atras-peque.png"))); // NOI18N
+        Volver_tipo.setText("VOLVER A SELECCIONAR TIPO");
+        Volver_tipo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Volver_tipoMouseClicked(evt);
+            }
+        });
+        jPanel1.add(Volver_tipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 310, 30));
+
         datosPersonales.setFont(new java.awt.Font("Ebrima", 3, 19)); // NOI18N
         datosPersonales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bola_.png"))); // NOI18N
         datosPersonales.setText(" DATOS PERSONALES");
@@ -987,6 +1047,16 @@ public class registro extends javax.swing.JFrame {
 
         jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -40, -1, -1));
 
+        datosPersonales1.setFont(new java.awt.Font("Ebrima", 3, 19)); // NOI18N
+        datosPersonales1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bola_.png"))); // NOI18N
+        datosPersonales1.setText(" DATOS PERSONALES");
+        datosPersonales1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                datosPersonales1MouseClicked(evt);
+            }
+        });
+        jPanel1.add(datosPersonales1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 250, 30));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1015,7 +1085,7 @@ public class registro extends javax.swing.JFrame {
         String documento = txtDocumento.getText().trim();
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
-        String telefono = txtTelefono.getText().trim();
+        String telefono = codigo_telefono.getText().trim();
         String email = txtEmail.getText().trim();
         String direccion = txtDireccion.getText().trim();
         String user = txtUsuario.getText().trim();
@@ -1169,7 +1239,7 @@ public class registro extends javax.swing.JFrame {
         String documento = txtDocumento.getText().trim();
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
-        String telefono = txtTelefono.getText().trim();
+        String telefono = codigo_telefono.getText().trim();
         String email = txtEmail.getText().trim();
         String direccion = txtDireccion.getText().trim();
         String user = txtUsuario.getText().trim();
@@ -1421,6 +1491,82 @@ public class registro extends javax.swing.JFrame {
         return valor.equalsIgnoreCase("Si") || valor.equalsIgnoreCase("Sí");
     }
 
+    // Suponiendo que tu ComboBox de País se llama 'cbPaisDondeVive'
+// Y tu campo de texto para el número de teléfono es 'txtTelefono'
+// Y el JLabel/JTextField para mostrar el código es 'lblCodigoPais' (o txtCodigoPais si prefieres)
+    /**
+     * Actualiza el código telefónico según el país seleccionado y valida el
+     * número ingresado. Este método debe ser llamado desde el evento
+     * ItemStateChanged del cbPaisDondeVive y desde el evento FocusLost o
+     * KeyReleased del txtTelefono.
+     */
+    private void actualizarCodigoTelefonoYValidar() {
+        String paisSeleccionado = (cbPais.getSelectedItem() != null) ? cbPais.getSelectedItem().toString() : "";
+        String numeroTelefono = txtTelefono1.getText().trim();
+
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+
+        // Si no hay país seleccionado o es la opción por defecto
+        if (paisSeleccionado.isEmpty() || paisSeleccionado.equals("Seleccione un país")) {
+            codigo_telefono.setText("");
+            txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY));
+            return;
+        }
+
+        // Obtener el código de país (Ej: "CO" para Colombia)
+        // Asumo que el cbPaisDondeVive guarda el nombre del país (ej. "Colombia")
+        // Necesitas una forma de mapear el nombre del país a su código ISO 3166-1 alpha-2 (ej. "CO")
+        String codigoRegion = obtenerCodigoIsoPais(paisSeleccionado); // <-- FUNCIÓN AUXILIAR NECESARIA
+
+        if (codigoRegion == null || codigoRegion.isEmpty()) {
+            codigo_telefono.setText("?"); // Si no encontramos el código ISO, mostrar interrogación
+            txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED));
+            return;
+        }
+
+        // 1. Mostrar el código de país en el JLabel
+        int countryCode = phoneUtil.getCountryCodeForRegion(codigoRegion);
+        if (countryCode != 0) {
+            codigo_telefono.setText("+" + countryCode);
+        } else {
+            codigo_telefono.setText("?");
+        }
+
+        // 2. Validar el número de teléfono ingresado
+        if (!numeroTelefono.isEmpty()) {
+            try {
+                // Intentar parsear el número junto con el código de región
+                PhoneNumber phoneNumber = phoneUtil.parse(numeroTelefono, codigoRegion);
+
+                if (phoneUtil.isValidNumber(phoneNumber) && phoneUtil.isValidNumberForRegion(phoneNumber, codigoRegion)) {
+                    txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.GREEN)); // Válido
+                    // Opcional: formatear el número para mostrarlo estándar
+                    // txtTelefono.setText(phoneUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL));
+                } else {
+                    txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED)); // Inválido
+                    JOptionPane.showMessageDialog(this, "El número de teléfono no es válido para " + paisSeleccionado + ".", "Formato Incorrecto", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (NumberParseException e) {
+                txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED)); // Error de parseo
+                JOptionPane.showMessageDialog(this, "El número de teléfono no tiene un formato reconocido.", "Error de Formato", JOptionPane.WARNING_MESSAGE);
+            }
+        } else {
+            txtTelefono1.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY)); // Vacío, estado normal
+        }
+    }
+
+    /**
+     * Función auxiliar para mapear el nombre del país (mostrado en el
+     * JComboBox) a su código ISO 3166-1 alpha-2 (ej: "Colombia" -> "CO"). Debes
+     * completar esta función con los países que soportes.
+     */
+    private String obtenerCodigoIsoPais(String nombrePais) {
+        if (paises != null && paises.containsKey(nombrePais)) {
+            return paises.get(nombrePais);
+        }
+        return null; // Si el país no está en nuestro mapa
+    }
+
     private void FotosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FotosMouseClicked
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setMultiSelectionEnabled(true);
@@ -1551,6 +1697,7 @@ public class registro extends javax.swing.JFrame {
 
         datosPersonales.setVisible(true);
         Continuar.setVisible(true);
+        Volver_tipo.setVisible(true);
         T_selected.setText("(HÚESPED)");
     }//GEN-LAST:event_jPanel8MouseClicked
 
@@ -1563,6 +1710,7 @@ public class registro extends javax.swing.JFrame {
         extrasVivienda2.setVisible(true);
         extrasVivienda.setVisible(true);
         Continuar.setVisible(true);
+        Volver_tipo.setVisible(true);
         T_selected.setText("(ANFITRIÓN)");
     }//GEN-LAST:event_jPanel9MouseClicked
 
@@ -1573,6 +1721,44 @@ public class registro extends javax.swing.JFrame {
     private void txtBarrioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBarrioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBarrioActionPerformed
+
+    private void volver_aloginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_volver_aloginMouseClicked
+        // TODO add your handling code here:
+        login volver = new login();
+        volver.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_volver_aloginMouseClicked
+
+    private void datosPersonales1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_datosPersonales1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datosPersonales1MouseClicked
+
+    private void Volver_tipoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Volver_tipoMouseClicked
+        // TODO add your handling code here:
+        jTabbedPane1.setSelectedIndex(0);
+        datosPersonales.setVisible(false);
+        datosVivienda.setVisible(false);
+        extrasVivienda2.setVisible(false);
+        extrasVivienda.setVisible(false);
+        Continuar.setVisible(false);
+        Volver_tipo.setVisible(false);
+    }//GEN-LAST:event_Volver_tipoMouseClicked
+
+    private void cbPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPaisActionPerformed
+        // TODO add your handling code here:
+        actualizarCodigoTelefonoYValidar();
+        estilizarCampo(txtTelefono1);
+    }//GEN-LAST:event_cbPaisActionPerformed
+
+    private void cbCiudadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCiudadActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_cbCiudadActionPerformed
+
+    private void txtTelefono1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelefono1FocusLost
+        // TODO add your handling code here:
+        actualizarCodigoTelefonoYValidar();
+    }//GEN-LAST:event_txtTelefono1FocusLost
 
     /**
      * @param args the command line arguments
@@ -1618,6 +1804,7 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JLabel Fotos1;
     private javax.swing.JLabel T_selected;
     private javax.swing.JPanel Tipo;
+    private javax.swing.JLabel Volver_tipo;
     private javax.swing.JComboBox<String> cbAgua;
     private javax.swing.JComboBox<String> cbAgua1;
     private javax.swing.JComboBox<String> cbBalcon;
@@ -1643,7 +1830,9 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cb_movilidad;
     private javax.swing.JComboBox<String> cb_movilidad1;
     private javax.swing.JComboBox<String> cb_vigilancia;
+    private javax.swing.JTextField codigo_telefono;
     private javax.swing.JLabel datosPersonales;
+    private javax.swing.JLabel datosPersonales1;
     private javax.swing.JLabel datosVivienda;
     private javax.swing.JLabel extrasVivienda;
     private javax.swing.JLabel extrasVivienda2;
@@ -1755,7 +1944,8 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecio;
-    private javax.swing.JTextField txtTelefono;
+    private javax.swing.JTextField txtTelefono1;
     private javax.swing.JTextField txtUsuario;
+    private javax.swing.JPanel volver_alogin;
     // End of variables declaration//GEN-END:variables
 }
