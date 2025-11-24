@@ -1944,9 +1944,6 @@ public class registro extends javax.swing.JFrame {
     private void jPanel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel9MouseClicked
         // TODO add your handling code here:
         jTabbedPane1.setSelectedIndex(1);
-        lbVista_Previa.removeAll();
-        lbVista_Previa.revalidate();
-        lbVista_Previa.repaint();
 
         datosPersonales.setVisible(true);
         datosVivienda.setVisible(true);
