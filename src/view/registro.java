@@ -17,6 +17,7 @@ import Model.dao.AlojamientoDAOImpl;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Image;
 import javax.swing.*;
 import java.awt.event.*;
@@ -52,7 +53,7 @@ public class registro extends javax.swing.JFrame {
         cargarPaisesDesdeAPI();
         cargarComboTiposVivienda();
         actualizarCodigoTelefonoYValidar();
-        
+
         //////////////////////////////////
         
         datosPersonales.setVisible(false);
@@ -61,8 +62,10 @@ public class registro extends javax.swing.JFrame {
         extrasVivienda.setVisible(false);
         Continuar.setVisible(false);
         Volver_tipo.setVisible(false);
-        
-        taDescripcion.setLineWrap(true); 
+        JTextFieldDateEditor editor = (JTextFieldDateEditor) jdNacimiento.getDateEditor();
+        editor.setEditable(false);
+
+        taDescripcion.setLineWrap(true);
         taDescripcion.setWrapStyleWord(true);
 
         estilizarCampo(txtDocumento);
@@ -204,85 +207,83 @@ public class registro extends javax.swing.JFrame {
     }
 
     public void guardarFotos(Alojamiento alojamiento, File[] fotosSeleccionadas) {
-    if (fotosSeleccionadas == null || fotosSeleccionadas.length == 0) return;
-
-    File carpeta = new File("Fotografias");
-    if (!carpeta.exists()) carpeta.mkdir();
-
-    for (File foto : fotosSeleccionadas) {
-        try {
-            File destino = new File(carpeta, UUID.randomUUID() + "_" + foto.getName());
-            Files.copy(foto.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-            // Asociar la ruta con el alojamiento
-            alojamiento.getFotos().add(destino.getPath());
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (fotosSeleccionadas == null || fotosSeleccionadas.length == 0) {
+            return;
         }
+
+        File carpeta = new File("Fotografias");
+        if (!carpeta.exists()) {
+            carpeta.mkdir();
+        }
+
+        for (File foto : fotosSeleccionadas) {
+            try {
+                File destino = new File(carpeta, UUID.randomUUID() + "_" + foto.getName());
+                Files.copy(foto.toPath(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                // Asociar la ruta con el alojamiento
+                alojamiento.getFotos().add(destino.getPath());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Guardar los cambios en JSON usando tu DAO
+        AlojamientoDAO dao = new AlojamientoDAOImpl();
+        dao.modificarAlojamiento(alojamiento);
     }
 
-    // Guardar los cambios en JSON usando tu DAO
-    AlojamientoDAO dao = new AlojamientoDAOImpl();
-    dao.modificarAlojamiento(alojamiento);
-    }
-    
     private Map<String, List<String>> obtenerTiposDeVivienda() {
-    Map<String, List<String>> datos = new LinkedHashMap<>();
+        Map<String, List<String>> datos = new LinkedHashMap<>();
 
-    datos.put("Viviendas Clásicas", Arrays.asList(
-        "Casa", "Apartamento", "Apartaestudio", "Estudio",
-        "Habitación", "Loft", "Duplex", "Triplex",
-        "Penthouse", "Mansión", "Villa", "Residencia"
-    ));
+        datos.put("Viviendas Clásicas", Arrays.asList(
+                "Casa", "Apartamento", "Apartaestudio", "Estudio",
+                "Habitación", "Loft", "Duplex", "Triplex",
+                "Penthouse", "Mansión", "Villa", "Residencia"
+        ));
 
-    datos.put("Viviendas Turísticas", Arrays.asList(
-        "Cabaña", "Casa de playa", "Casa campestre", "Finca",
-        "Chalet", "Bungalow", "Carpa", "Glamping",
-        "Eco Lodge", "Hostal", "Hostel", "Hotel",
-        "Resort", "Casa rural", "Hacienda"
-    ));
+        datos.put("Viviendas Turísticas", Arrays.asList(
+                "Cabaña", "Casa de playa", "Casa campestre", "Finca",
+                "Chalet", "Bungalow", "Carpa", "Glamping",
+                "Eco Lodge", "Hostal", "Hostel", "Hotel",
+                "Resort", "Casa rural", "Hacienda"
+        ));
 
-    datos.put("Viviendas Especiales", Arrays.asList(
-        "Tiny House", "Houseboat", "Barco casa", "Yate", 
-        "Caravana", "Motorhome", "Trailer",
-        "Container Home", "Modular Home", "Prefabricada"
-    ));
+        datos.put("Viviendas Especiales", Arrays.asList(
+                "Tiny House", "Houseboat", "Barco casa", "Yate",
+                "Caravana", "Motorhome", "Trailer",
+                "Container Home", "Modular Home", "Prefabricada"
+        ));
 
-    datos.put("Urbanas", Arrays.asList(
-        "Condominio", "Townhouse", "Torre residencial",
-        "Suite", "Microapartamento", "Miniloft"
-    ));
+        datos.put("Urbanas", Arrays.asList(
+                "Condominio", "Townhouse", "Torre residencial",
+                "Suite", "Microapartamento", "Miniloft"
+        ));
 
-    datos.put("Exóticas", Arrays.asList(
-        "Igloo", "Castillo", "Casa en el árbol",
-        "Tipi", "Yurta"
-    ));
+        datos.put("Exóticas", Arrays.asList(
+                "Igloo", "Castillo", "Casa en el árbol",
+                "Tipi", "Yurta"
+        ));
 
-    return datos;
+        return datos;
     }
-    
+
     private void cargarComboTiposVivienda() {
 
         Map<String, List<String>> datos = obtenerTiposDeVivienda();
         cbTipo_vivienda.removeAllItems(); // Limpia el combo
         cbTipo_vivienda.addItem("Seleccione un tipo de vivienda");
-        
-        
+
         for (String categoria : datos.keySet()) {
-        // Agregar categoría como separador visual
-        cbTipo_vivienda.addItem("----- " + categoria.toUpperCase() + " -----");
-        // Agregar tipos reales
+            // Agregar categoría como separador visual
+            cbTipo_vivienda.addItem("----- " + categoria.toUpperCase() + " -----");
+            // Agregar tipos reales
             for (String tipo : datos.get(categoria)) {
                 cbTipo_vivienda.addItem(tipo);
             }
         }
     }
-    
-
-
-    
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1150,19 +1151,24 @@ public class registro extends javax.swing.JFrame {
 
     private void ContinuarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ContinuarMouseClicked
         if (T_selected.getText().equals("(HÚESPED)")) {
-            registrarHuesped();
+            if (registrarHuesped()) {
+                login volver = new login();
+                volver.setVisible(true);
+                this.setVisible(false);
+            }
         } else if (T_selected.getText().equals("(ANFITRIÓN)")) {
-            registrarAnfitrionCompleto();
+            if (registrarHuesped()) {
+                registrarAnfitrionCompleto();
+                login volver = new login();
+                volver.setVisible(true);
+                this.setVisible(false);
+            }
         }
-        login logeo = new login();
-        logeo.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_ContinuarMouseClicked
 
     private boolean registrarHuesped() {
 
         // --- 1. CAPTURA DE DATOS ---
-        
         String documento = txtDocumento.getText().trim();
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
@@ -1193,94 +1199,94 @@ public class registro extends javax.swing.JFrame {
         // =================================================================================
         if (documento.isEmpty() || !documento.matches("\\d{7,10}") || documento.matches("0+")) {
             JOptionPane.showMessageDialog(this, "El Documento es obligatorio, debe tener entre 7 y 10 dígitos y no puede ser solo ceros.",
-                "Error en Documento",
-            JOptionPane.WARNING_MESSAGE);
-        return false;
+                    "Error en Documento",
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
         }
 
         if (nombre.isEmpty() || !nombre.matches("[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+")) {
-            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio y no puede contener números ni caracteres especiales.", 
-                    "Error en Nombre",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio y no puede contener números ni caracteres especiales.",
+                    "Error en Nombre", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
         if (apellido.isEmpty() || !apellido.matches("[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+")) {
-            JOptionPane.showMessageDialog(this, "El Apellido es obligatorio y no puede contener números ni caracteres especiales.", 
-                    "Error en Apellido",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Apellido es obligatorio y no puede contener números ni caracteres especiales.",
+                    "Error en Apellido", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
         if (edadIngresada <= 0) {
             JOptionPane.showMessageDialog(this,
-            "La edad no puede ser menor o igual a cero.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
-        return false;
+                    "La edad no puede ser menor o igual a cero.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
 
         if (edadIngresada > 120) {
             JOptionPane.showMessageDialog(this, "La edad ingresada no es válida.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
-        
+
         if (jdNacimiento.getDate() == null) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de nacimiento.", "Error en Fecha", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
-        
+
         int edadCalculada = Period.between(fechaNacimiento, LocalDate.now()).getYears();
         if (edadCalculada < 18) {
             JOptionPane.showMessageDialog(this, "Debe tener al menos 18 años para registrarse.", "Restricción de Edad", JOptionPane.ERROR_MESSAGE);
-        return false;
+            return false;
         }
 
         if (edadIngresada != edadCalculada) {
-            JOptionPane.showMessageDialog(this, "Inconsistencia: La edad ingresada(" +edadIngresada+ ")no coincide con la calculada según la fecha de nacimiento "
-                    + "(" +edadCalculada + " años).", "Error de Datos", JOptionPane.WARNING_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(this, "Inconsistencia: La edad ingresada(" + edadIngresada + ")no coincide con la calculada según la fecha de nacimiento "
+                    + "(" + edadCalculada + " años).", "Error de Datos", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
-        
+
         if (num_telefono.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El número de teléfono es obligatorio.", "Error en Teléfono", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
-        
+
         if (!num_telefono.matches("\\d{7,15}")) {
             JOptionPane.showMessageDialog(this, "Ingrese un número válido (solo dígitos, entre 7 y 15).", "Error en Teléfono", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
 
         if (email.isEmpty() || email.contains(" ")) {
-            JOptionPane.showMessageDialog(this,"El correo electrónico es obligatorio y el correo electrónico no puede contener espacios.", "Error en Email", JOptionPane.WARNING_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(this, "El correo electrónico es obligatorio y el correo electrónico no puede contener espacios.", "Error en Email", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
-        
+
         if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,10}$")) {
-            JOptionPane.showMessageDialog(this,"Ingrese un correo electrónico válido (ej: usuario@dominio.com).", "Error en Email", JOptionPane.WARNING_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(this, "Ingrese un correo electrónico válido (ej: usuario@dominio.com).", "Error en Email", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
-        
+
         if (email.chars().filter(c -> c == '@').count() != 1 || email.startsWith("@") || email.endsWith("@")) {
-        JOptionPane.showMessageDialog(this, "El correo electrónico debe contener exactamente un símbolo '@' y no puede iniciar o terminar con '@'. ", "Error en Email", JOptionPane.WARNING_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(this, "El correo electrónico debe contener exactamente un símbolo '@' y no puede iniciar o terminar con '@'. ", "Error en Email", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
-        
+
         if (barrio.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El barrio es obligatorio.", "Error en Barrio", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
 
         if (!barrio.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s.-]+")) {
             JOptionPane.showMessageDialog(this, "El nombre del barrio contiene caracteres no válidos.", "Error en Barrio", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
-        
+
         if (direccion.isEmpty()) {
             JOptionPane.showMessageDialog(this, "La dirección es obligatoria.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
 
         if (!direccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.-]+")) {
-            JOptionPane.showMessageDialog(this,"La dirección contiene caracteres no válidos.","Error en Dirección", JOptionPane.WARNING_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(this, "La dirección contiene caracteres no válidos.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
 
         String passwordRegex = "^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$";
@@ -1295,7 +1301,7 @@ public class registro extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "El nombre de Usuario es obligatorio.", "Campos Vacíos", JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        
+
         String telefonoCompleto = codigo_pais + num_telefono;
 
         // =================================================================================
@@ -1311,6 +1317,20 @@ public class registro extends javax.swing.JFrame {
                         "El número de documento " + documento + " ya se encuentra registrado.",
                         "Cliente Existente", JOptionPane.ERROR_MESSAGE);
                 return false;
+            }
+
+            java.util.List<Model.Cuenta_cliente> listaClientes = clienteCtrl.listarClientes();
+            if (listaClientes != null) {
+                for (Model.Cuenta_cliente c : listaClientes) {
+                    if (c.getEmail().equalsIgnoreCase(email)) {
+                        JOptionPane.showMessageDialog(this, "El correo electrónico " + email + " ya está registrado.", "Correo Duplicado", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    if (c.getTelefono().equals(telefonoCompleto)) {
+                        JOptionPane.showMessageDialog(this, "El número de teléfono " + telefonoCompleto + " ya está registrado.", "Teléfono Duplicado", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                }
             }
 
             // 2. CREAR Y GUARDAR USUARIO (LOGIN)
@@ -1373,7 +1393,6 @@ public class registro extends javax.swing.JFrame {
         String user = txtUsuario.getText().trim();
         String pass = txtContraseña.getText().trim();
 
-        
         String ciudadVivienda = (cbCiudad.getSelectedItem() != null) ? cbCiudad.getSelectedItem().toString() : "";
         String idiomas = (cbIdioma.getSelectedItem() != null) ? cbIdioma.getSelectedItem().toString() : "Español";
 
@@ -1392,94 +1411,94 @@ public class registro extends javax.swing.JFrame {
         // =================================================================================
         if (documento.isEmpty() || !documento.matches("\\d{7,10}") || documento.matches("0+")) {
             JOptionPane.showMessageDialog(this, "El Documento es obligatorio, debe tener entre 7 y 10 dígitos y no puede ser solo ceros.",
-                "Error en Documento",
-            JOptionPane.WARNING_MESSAGE);
-        return false;
+                    "Error en Documento",
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
         }
 
         if (nombre.isEmpty() || !nombre.matches("[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+")) {
-            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio y no puede contener números ni caracteres especiales.", 
-                    "Error en Nombre",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Nombre es obligatorio y no puede contener números ni caracteres especiales.",
+                    "Error en Nombre", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
         if (apellido.isEmpty() || !apellido.matches("[a-zA-ZñÑáéíóúÁÉÍÓÚ\\s]+")) {
-            JOptionPane.showMessageDialog(this, "El Apellido es obligatorio y no puede contener números ni caracteres especiales.", 
-                    "Error en Apellido",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El Apellido es obligatorio y no puede contener números ni caracteres especiales.",
+                    "Error en Apellido", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
         if (edadIngresada <= 0) {
             JOptionPane.showMessageDialog(this,
-            "La edad no puede ser menor o igual a cero.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
-        return false;
+                    "La edad no puede ser menor o igual a cero.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
 
         if (edadIngresada > 120) {
             JOptionPane.showMessageDialog(this, "La edad ingresada no es válida.", "Error en Edad", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
-        
+
         if (jdNacimiento.getDate() == null) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de nacimiento.", "Error en Fecha", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
-        
+
         int edadCalculada = Period.between(fechaNacimiento, LocalDate.now()).getYears();
         if (edadCalculada < 18) {
             JOptionPane.showMessageDialog(this, "Debe tener al menos 18 años para registrarse.", "Restricción de Edad", JOptionPane.ERROR_MESSAGE);
-        return false;
+            return false;
         }
 
         if (edadIngresada != edadCalculada) {
-            JOptionPane.showMessageDialog(this, "Inconsistencia: La edad ingresada(" +edadIngresada+ ")no coincide con la calculada según la fecha de nacimiento "
-                    + "(" +edadCalculada + " años).", "Error de Datos", JOptionPane.WARNING_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(this, "Inconsistencia: La edad ingresada(" + edadIngresada + ")no coincide con la calculada según la fecha de nacimiento "
+                    + "(" + edadCalculada + " años).", "Error de Datos", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
-        
+
         if (num_telefono.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El número de teléfono es obligatorio.", "Error en Teléfono", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
-        
+
         if (!num_telefono.matches("\\d{7,15}")) {
             JOptionPane.showMessageDialog(this, "Ingrese un número válido (solo dígitos, entre 7 y 15).", "Error en Teléfono", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
 
         if (email.isEmpty() || email.contains(" ")) {
-            JOptionPane.showMessageDialog(this,"El correo electrónico es obligatorio y el correo electrónico no puede contener espacios.", "Error en Email", JOptionPane.WARNING_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(this, "El correo electrónico es obligatorio y el correo electrónico no puede contener espacios.", "Error en Email", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
-        
+
         if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,10}$")) {
-            JOptionPane.showMessageDialog(this,"Ingrese un correo electrónico válido (ej: usuario@dominio.com).", "Error en Email", JOptionPane.WARNING_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(this, "Ingrese un correo electrónico válido (ej: usuario@dominio.com).", "Error en Email", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
-        
+
         if (email.chars().filter(c -> c == '@').count() != 1 || email.startsWith("@") || email.endsWith("@")) {
-        JOptionPane.showMessageDialog(this, "El correo electrónico debe contener exactamente un símbolo '@' y no puede iniciar o terminar con '@'. ", "Error en Email", JOptionPane.WARNING_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(this, "El correo electrónico debe contener exactamente un símbolo '@' y no puede iniciar o terminar con '@'. ", "Error en Email", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
-        
+
         if (barrio.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El barrio es obligatorio.", "Error en Barrio", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
 
         if (!barrio.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s.-]+")) {
             JOptionPane.showMessageDialog(this, "El nombre del barrio contiene caracteres no válidos.", "Error en Barrio", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
-        
+
         if (direccion.isEmpty()) {
             JOptionPane.showMessageDialog(this, "La dirección es obligatoria.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
 
         if (!direccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.-]+")) {
-            JOptionPane.showMessageDialog(this,"La dirección contiene caracteres no válidos.","Error en Dirección", JOptionPane.WARNING_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(this, "La dirección contiene caracteres no válidos.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
 
         String passwordRegex = "^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$";
@@ -1489,12 +1508,12 @@ public class registro extends javax.swing.JFrame {
                     "Contraseña Insegura", JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        
+
         if (user.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El nombre de Usuario es obligatorio.", "Campos Vacíos", JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        
+
         String telefonoCompleto = codigo_pais + num_telefono;
 
         // =================================================================================
@@ -1539,7 +1558,7 @@ public class registro extends javax.swing.JFrame {
         boolean tieneVigilancia = esSi(cb_vigilancia);
         boolean tieneConjunto = esSi(cbConjunto);
 
-            boolean disponible = true;
+        boolean disponible = true;
 
         // =================================================================================
         // 5. VALIDACIONES LÓGICAS DEL ALOJAMIENTO (NUEVAS)
@@ -1552,24 +1571,24 @@ public class registro extends javax.swing.JFrame {
 
         if (!alojBarrio.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s.-]+")) {
             JOptionPane.showMessageDialog(this, "El nombre del barrio contiene caracteres no válidos.", "Error en Barrio", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
 
         if (!alojDireccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.-]+")) {
-            JOptionPane.showMessageDialog(this,"La dirección contiene caracteres no válidos.","Error en Dirección", JOptionPane.WARNING_MESSAGE);
-        return false;
+            JOptionPane.showMessageDialog(this, "La dirección contiene caracteres no válidos.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
-        
+
         //VALIDAR DESCRIPCION
         if (alojDescripcion.isEmpty()) {
             JOptionPane.showMessageDialog(this, "La descripción no puede estar vacía.", "Error", JOptionPane.ERROR_MESSAGE);
-        return false;
-        }   
+            return false;
+        }
         if (alojDescripcion.length() < 20 && alojDescripcion.length() > 500) {
             JOptionPane.showMessageDialog(this, "La descripción debe tener como minimo 20 caracteres y como maximo 500 caracteres", "Error en la descripción", JOptionPane.WARNING_MESSAGE);
-        return false;
+            return false;
         }
-        
+
         // Cantidades Positivas (Capacidad, Habitaciones, Baños)
         if (valCapacidad <= 0) {
             JOptionPane.showMessageDialog(this, "La capacidad máxima debe ser al menos 1 persona.", "Error en Capacidad", JOptionPane.WARNING_MESSAGE);
@@ -1593,14 +1612,14 @@ public class registro extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "El precio máximo permitido es de $100,000 COP.", "Precio Excedido", JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        
-      if (cbTipo_vivienda == null || cbTipo_vivienda.equals("Seleccione un tipo de vivienda")){
-        JOptionPane.showMessageDialog(this,
-            "Debe seleccionar un tipo de vivienda válido.",
-            "Error en Tipo de Vivienda",
-            JOptionPane.WARNING_MESSAGE);
-        return false;
-    }
+
+        if (cbTipo_vivienda == null || cbTipo_vivienda.equals("Seleccione un tipo de vivienda")) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un tipo de vivienda válido.",
+                    "Error en Tipo de Vivienda",
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
 
         // =================================================================================
         // 6. GUARDADO Y PERSISTENCIA
@@ -1618,6 +1637,26 @@ public class registro extends javax.swing.JFrame {
                 return false;
             }
 
+            List<Model.Cuenta_Anfitrion> listaHosts = hostCtrl.listarAnfitriones();
+            if (listaHosts != null) {
+                for (Model.Cuenta_Anfitrion host : listaHosts) {
+                    // 1. Validar Email Duplicado
+                    if (host.getEmail().equalsIgnoreCase(email)) {
+                        JOptionPane.showMessageDialog(this,
+                                "El correo electrónico " + email + " ya está asociado a otra cuenta de anfitrión.",
+                                "Correo Duplicado", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                    // 2. Validar Teléfono Duplicado
+                    if (host.getTelefono().equals(telefonoCompleto)) {
+                        JOptionPane.showMessageDialog(this,
+                                "El número de teléfono " + telefonoCompleto + " ya está registrado en el sistema.",
+                                "Teléfono Duplicado", JOptionPane.ERROR_MESSAGE);
+                        return false;
+                    }
+                }
+            }
+
             // 1. Crear Usuario
             Usuario nuevoUsuario = new Usuario(user, pass, "ANFITRION");
 
@@ -1627,15 +1666,15 @@ public class registro extends javax.swing.JFrame {
                     true, // estado bloqueado o no
                     "0.0", //calificacion
                     nombre,
-                    apellido, 
-                    documento, 
-                    String.valueOf(edadIngresada), 
-                    telefonoCompleto, 
+                    apellido,
+                    documento,
+                    String.valueOf(edadIngresada),
+                    telefonoCompleto,
                     email,
                     barrio, // Barrio Persona
-                    direccion, 
-                    fechaNacimiento, 
-                    idiomas, 
+                    direccion,
+                    fechaNacimiento,
+                    idiomas,
                     ciudadVivienda
             );
 
@@ -1683,7 +1722,7 @@ public class registro extends javax.swing.JFrame {
         campo.setForeground(java.awt.Color.BLACK); // O negro dependiendo del panel
     }
 
-        //METODO PARA LOS COMBO DE TRUE O FALSE
+    //METODO PARA LOS COMBO DE TRUE O FALSE
     private boolean esSi(javax.swing.JComboBox<String> combo) {
         if (combo.getSelectedItem() == null) {
             return false;
@@ -1905,6 +1944,9 @@ public class registro extends javax.swing.JFrame {
     private void jPanel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel9MouseClicked
         // TODO add your handling code here:
         jTabbedPane1.setSelectedIndex(1);
+        lbVista_Previa.removeAll();
+        lbVista_Previa.revalidate();
+        lbVista_Previa.repaint();
 
         datosPersonales.setVisible(true);
         datosVivienda.setVisible(true);
@@ -1936,6 +1978,10 @@ public class registro extends javax.swing.JFrame {
 
     private void Volver_tipoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Volver_tipoMouseClicked
         // TODO add your handling code here:
+        Limpiar_campos();
+    }//GEN-LAST:event_Volver_tipoMouseClicked
+
+    public void Limpiar_campos(){
         jTabbedPane1.setSelectedIndex(0);
         datosPersonales.setVisible(false);
         datosVivienda.setVisible(false);
@@ -1943,8 +1989,33 @@ public class registro extends javax.swing.JFrame {
         extrasVivienda.setVisible(false);
         Continuar.setVisible(false);
         Volver_tipo.setVisible(false);
-    }//GEN-LAST:event_Volver_tipoMouseClicked
 
+        txtDocumento.setText("");
+        txtNombre.setText("");
+        txtApellido.setText("");
+        jdNacimiento.setDate(null);
+        jsEdad.setValue(0);
+        txtEmail.setText("");
+        cbPais.setSelectedIndex(0);
+        cbIdioma.setSelectedIndex(0);
+        cbCiudad.setSelectedIndex(0);
+        txtBarrio.setText("");
+        txtDireccion.setText("");
+        txtTelefono.setText("");
+        txtUsuario.setText("");
+        txtContraseña.setText("");
+        taDescripcion.setText("");
+        cbPais_vivienda.setSelectedIndex(0);
+        cbCiudad_vivienda.setSelectedIndex(0);
+        txtBarrio_vivienda.setText("");
+        txtDireccion_vivienda.setText("");
+        jsCapacidad.setValue(0);
+        jsHabitaciones.setValue(0);
+        jsBaños.setValue(0);
+        cbTipo_vivienda.setSelectedIndex(0);
+        txtPrecio.setText("");
+    }
+    
     private void cbPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPaisActionPerformed
         // TODO add your handling code here:
         actualizarCodigoTelefonoYValidar();

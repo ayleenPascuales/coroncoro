@@ -5,5 +5,11 @@
     "usuario": "ayleen1",
     "contraseña": "ayleen123$",
     "tipoUsuario": "ANFITRION"
+  },
+  {
+    "id_usuario": "696f3050-0841-4942-91b4-ec2d617f6760",
+    "usuario": "Boros25",
+    "contraseña": "Ninguna24%",
+    "tipoUsuario": "HUESPED"
   }
 ]
