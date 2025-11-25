@@ -9,18 +9,17 @@ import java.awt.*;
 import javax.swing.*;
 import java.util.List;
 
-
-
 /**
  *
  * @author aylee
  */
 public class Detalles extends javax.swing.JPanel {
+
     private JLabel fotoActual; // JLabel para mostrar la foto actual
     private int indiceFoto = 0; // Índice de la foto que se está mostrando
-    private Timer timer; 
+    private Timer timer;
     private Alojamiento alojamiento;
-     
+
     /**
      * Creates new form Detalles
      */
@@ -29,13 +28,14 @@ public class Detalles extends javax.swing.JPanel {
         initComponents();
         llenarCampos();
         cargarFotos(alojamiento.getFotos());
-       
+
         txtADescripcion_vivienda.setLineWrap(true);
         txtADescripcion_vivienda.setWrapStyleWord(true);
-      
+
     }
-    
-    private void llenarCampos(){
+
+    private void llenarCampos() {
+        ID_alojamiento.setText(alojamiento.getId_alojamiento());
         txtPais_vivienda.setText(alojamiento.getPais());
         txtCiudad_vivienda.setText(alojamiento.getCiudad());
         txtBarrio_vivienda.setText(alojamiento.getBarrio());
@@ -55,9 +55,8 @@ public class Detalles extends javax.swing.JPanel {
         txtMovilidad_vivienda.setText(alojamiento.isPersonas_poca_movilidad() ? "Sí" : "No");
         txtVigilancia_vivienda.setText(alojamiento.isVigilancia() ? "Sí" : "No");
         txtPiscina_vivienda.setText(alojamiento.isPiscina() ? "Sí" : "No");
-        
     }
-    
+
     public void cargarFotos(List<String> fotos) {
         // Detener timer anterior si existe
         if (timer != null && timer.isRunning()) {
@@ -68,7 +67,9 @@ public class Detalles extends javax.swing.JPanel {
         panel_fotos.removeAll();
         panel_fotos.setLayout(new BorderLayout());
 
-        if (fotos == null || fotos.isEmpty()) return;
+        if (fotos == null || fotos.isEmpty()) {
+            return;
+        }
 
         // Primera foto
         ImageIcon img = new ImageIcon(fotos.get(0));
@@ -156,9 +157,10 @@ public class Detalles extends javax.swing.JPanel {
         txtParques_vivienda = new javax.swing.JTextField();
         txtCapacidad_vivienda = new javax.swing.JTextField();
         txtPrecio_vivienda = new javax.swing.JTextField();
-        txtVigilancia_vivienda = new javax.swing.JTextField();
+        ID_alojamiento = new javax.swing.JTextField();
         jLabel52 = new javax.swing.JLabel();
         Volver_tipo = new javax.swing.JLabel();
+        txtVigilancia_vivienda = new javax.swing.JTextField();
 
         txtDireccion_vivienda7.setEditable(false);
         txtDireccion_vivienda7.setBackground(new java.awt.Color(255, 255, 255));
@@ -394,10 +396,10 @@ public class Detalles extends javax.swing.JPanel {
         txtPrecio_vivienda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
         jPanel14.add(txtPrecio_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 540, 220, -1));
 
-        txtVigilancia_vivienda.setEditable(false);
-        txtVigilancia_vivienda.setBackground(new java.awt.Color(255, 255, 255));
-        txtVigilancia_vivienda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
-        jPanel14.add(txtVigilancia_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 810, 220, -1));
+        ID_alojamiento.setEditable(false);
+        ID_alojamiento.setBackground(new java.awt.Color(255, 255, 255));
+        ID_alojamiento.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        jPanel14.add(ID_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 860, 220, -1));
 
         jLabel52.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel52.setText("¿Tiene piscina?");
@@ -413,6 +415,11 @@ public class Detalles extends javax.swing.JPanel {
             }
         });
         jPanel14.add(Volver_tipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 910, 100, 30));
+
+        txtVigilancia_vivienda.setEditable(false);
+        txtVigilancia_vivienda.setBackground(new java.awt.Color(255, 255, 255));
+        txtVigilancia_vivienda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        jPanel14.add(txtVigilancia_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 810, 220, -1));
 
         jScrollPane1.setViewportView(jPanel14);
 
@@ -432,25 +439,25 @@ public class Detalles extends javax.swing.JPanel {
 
     private void Volver_tipoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Volver_tipoMouseClicked
         // TODO add your handling code here:
-       JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        if(frame != null){
-        frame.dispose();
-    }
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if (frame != null) {
+            frame.dispose();
+        }
     }//GEN-LAST:event_Volver_tipoMouseClicked
 
     private void jLabel37MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel37MouseClicked
         // TODO add your handling code here:
         reservar panelReservar = new reservar();
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this); // obtener el JFrame actual
-
         frame.getContentPane().removeAll(); // quitar todo lo que haya
         frame.getContentPane().add(panelReservar);
         frame.revalidate();  // refresca el layout
-        frame.repaint(); 
+        frame.repaint();
     }//GEN-LAST:event_jLabel37MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField ID_alojamiento;
     private javax.swing.JLabel Volver_tipo;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel17;

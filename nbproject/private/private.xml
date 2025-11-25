@@ -3,12 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/aylee/OneDrive/Documentos/NetBeansProjects/try_41/src/view/registro.java</file>
-            <file>file:/C:/Users/aylee/OneDrive/Documentos/NetBeansProjects/try_41/src/view/panel_publicaciones.java</file>
-            <file>file:/C:/Users/aylee/OneDrive/Documentos/NetBeansProjects/try_41/src/view/login.java</file>
-            <file>file:/C:/Users/aylee/OneDrive/Documentos/NetBeansProjects/try_41/src/view/Detalles.java</file>
-            <file>file:/C:/Users/aylee/OneDrive/Documentos/NetBeansProjects/try_41/src/Model/Alojamiento.java</file>
-            <file>file:/C:/Users/aylee/OneDrive/Documentos/NetBeansProjects/try_41/src/view/menu_main.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/view/reservar.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/view/registro.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/view/menu_main.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/Model/Reservas.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/Model/Cuenta_admin.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/Model/Cuenta_Anfitrion.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/view/panel_publicaciones.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/view/login.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/view/Detalles.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/Model/Reseñas.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/Model/Cuenta_cliente.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/Model/Alojamiento.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/Model/Fotos.java</file>
+            <file>file:/C:/Users/Boris%20Jimenez/Downloads/coroncoro/src/json/alojamientos.json</file>
         </group>
     </open-files>
 </project-private>

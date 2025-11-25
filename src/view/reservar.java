@@ -5,7 +5,13 @@
 package view;
 
 import Model.Alojamiento;
+import Model.Reservas;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
@@ -19,6 +25,7 @@ public class reservar extends javax.swing.JPanel {
      */
     public reservar() {
         initComponents();
+        jTextField1.setVisible(false);
     }
 
     /**
@@ -31,7 +38,6 @@ public class reservar extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel73 = new javax.swing.JLabel();
-        jLabel74 = new javax.swing.JLabel();
         jLabel75 = new javax.swing.JLabel();
         jLabel76 = new javax.swing.JLabel();
         jLabel77 = new javax.swing.JLabel();
@@ -44,7 +50,6 @@ public class reservar extends javax.swing.JPanel {
         jLabel82 = new javax.swing.JLabel();
         jLabel83 = new javax.swing.JLabel();
         jLabel84 = new javax.swing.JLabel();
-        txtLugar_reserva = new javax.swing.JTextField();
         txtDocumento = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         txtApellido = new javax.swing.JTextField();
@@ -53,6 +58,7 @@ public class reservar extends javax.swing.JPanel {
         cbPais_vivienda = new javax.swing.JComboBox<>();
         cbPais_vivienda1 = new javax.swing.JComboBox<>();
         jLabel85 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -61,17 +67,13 @@ public class reservar extends javax.swing.JPanel {
         jLabel73.setText("RESERVAR");
         add(jLabel73, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 20, 140, 40));
 
-        jLabel74.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel74.setText("Lugar de la reserva:");
-        add(jLabel74, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 100, 140, 20));
-
         jLabel75.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel75.setText("Documento:");
-        add(jLabel75, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, 140, 20));
+        add(jLabel75, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 100, 140, 20));
 
         jLabel76.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel76.setText("Nombre:");
-        add(jLabel76, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, 140, 20));
+        add(jLabel76, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, 140, 20));
 
         jLabel77.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel77.setText("Apellido:");
@@ -81,6 +83,11 @@ public class reservar extends javax.swing.JPanel {
         jLabel78.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/campana.png"))); // NOI18N
         jLabel78.setText("RESERVAR");
         jLabel78.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jLabel78.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel78MouseClicked(evt);
+            }
+        });
         add(jLabel78, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 470, 120, 30));
 
         jLabel79.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
@@ -109,20 +116,15 @@ public class reservar extends javax.swing.JPanel {
         jLabel84.setText("Hora de salida:");
         add(jLabel84, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 180, 140, 20));
 
-        txtLugar_reserva.setEditable(false);
-        txtLugar_reserva.setBackground(new java.awt.Color(255, 255, 255));
-        txtLugar_reserva.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
-        add(txtLugar_reserva, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, 220, -1));
-
         txtDocumento.setEditable(false);
         txtDocumento.setBackground(new java.awt.Color(255, 255, 255));
         txtDocumento.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
-        add(txtDocumento, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, 220, -1));
+        add(txtDocumento, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, 220, -1));
 
         txtNombre.setEditable(false);
         txtNombre.setBackground(new java.awt.Color(255, 255, 255));
         txtNombre.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
-        add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 300, 220, -1));
+        add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, 220, -1));
 
         txtApellido.setEditable(false);
         txtApellido.setBackground(new java.awt.Color(255, 255, 255));
@@ -155,13 +157,131 @@ public class reservar extends javax.swing.JPanel {
             }
         });
         add(jLabel85, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 470, 100, 30));
+
+        jTextField1.setText("jTextField1");
+        add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel85MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel85MouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jLabel85MouseClicked
 
+    private void jLabel78MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel78MouseClicked
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jLabel78MouseClicked
+
+    private void realizarReserva() {
+        // =========================================================================
+        // 1. VALIDACIÓN DE PRE-REQUISITOS
+        // =========================================================================
+
+        // =========================================================================
+        // 2. CAPTURA Y CONVERSIÓN DE FECHAS (JDateChooser -> LocalDate)
+        // =========================================================================
+        Date dateEntrada = dcEntrada.getDate();
+        Date dateSalida = dcSalida.getDate();
+
+        if (dateEntrada == null || dateSalida == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione fechas de entrada y salida.", "Campos Vacíos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        LocalDate diaEntrada = dateEntrada.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate diaSalida = dateSalida.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // Validación lógica de fechas
+        if (!diaSalida.isAfter(diaEntrada)) {
+            JOptionPane.showMessageDialog(this, "La fecha de salida debe ser posterior a la entrada.", "Error Fechas", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (diaEntrada.isBefore(LocalDate.now())) {
+            JOptionPane.showMessageDialog(this, "No puede reservar en fechas pasadas.", "Error Fechas", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // =========================================================================
+        // 3. CAPTURA Y CONVERSIÓN DE HORAS (ComboBox String -> LocalDateTime)
+        // =========================================================================
+        // Asumiendo que cbPais_vivienda es Hora Entrada y cbPais_vivienda1 es Hora Salida (según tu imagen)
+        String strHoraEntrada = (cbPais_vivienda.getSelectedItem() != null) ? cbPais_vivienda.getSelectedItem().toString() : "";
+        String strHoraSalida = (cbPais_vivienda1.getSelectedItem() != null) ? cbPais_vivienda1.getSelectedItem().toString() : "";
+
+        if (strHoraEntrada.isEmpty() || strHoraSalida.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Seleccione las horas de entrada y salida.", "Campos Vacíos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Convertir el String del ComboBox (ej: "3:00") a LocalTime y luego a LocalDateTime
+        // Nota: Necesitamos formatear. Si tu combo dice "3:00", asumiremos formato 24h o AM/PM. 
+        // Para simplificar, asumiremos que conviertes "3:00" a 15:00 o lo parseas manualmente.
+        LocalDateTime ldtEntrada = combinarFechaYHora(diaEntrada, strHoraEntrada);
+        LocalDateTime ldtSalida = combinarFechaYHora(diaSalida, strHoraSalida);
+
+        // =========================================================================
+        // 4. CREACIÓN DEL OBJETO RESERVAS (Ajustado a tu Constructor)
+        // =========================================================================
+        try {
+            // Tu constructor pide: 
+            // (num_reserva, tipo, lugar, nombre, apellido, doc, tel, email, diaIn, diaOut, horaIn, horaOut)
+
+            Reservas nuevaReserva = new Reservas(
+                    null, // num_reserva: Se ignora porque el constructor genera uno nuevo con UUID
+                    "Apartamento", // tipo_reserva: Puedes sacarlo de un combo o ponerlo fijo si vienes de detalles
+                    "", // lugar_reserva: Tu constructor lo pide pero NO lo guarda en la clase
+                    clienteActual.getNombre(), // Autocompletado
+                    clienteActual.getApellido(), // Autocompletado
+                    clienteActual.getDocumento(), // Autocompletado
+                    clienteActual.getTelefono(), // Autocompletado
+                    clienteActual.getEmail(), // Autocompletado
+                    diaEntrada,
+                    diaSalida,
+                    ldtEntrada,
+                    ldtSalida
+            );
+
+            // =========================================================================
+            // 5. GUARDADO
+            // =========================================================================
+            reservaController controller = new reservaController();
+            controller.guardarReserva(nuevaReserva);
+
+            JOptionPane.showMessageDialog(this, "¡Reserva realizada con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+            // Opcional: Cerrar o limpiar
+            // limpiarCampos();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage());
+        }
+    }
+
+// Método auxiliar para convertir el texto del Combo a LocalDateTime
+    private LocalDateTime combinarFechaYHora(LocalDate fecha, String horaTexto) {
+        // Lógica simple: Si el combo dice "3:00", asumimos 15:00 (Check-in)
+        // Si dice "12:00", es 12:00 (Check-out). Ajusta esto según tus items del ComboBox.
+
+        int hora = 0;
+        int minuto = 0;
+
+        try {
+            String[] partes = horaTexto.split(":");
+            hora = Integer.parseInt(partes[0].trim());
+            if (partes.length > 1) {
+                minuto = Integer.parseInt(partes[1].trim());
+            }
+
+            // Ajuste manual simple si tus combos son estilo PM sin decir PM
+            if (hora < 12 && hora != 0 && horaTexto.equals("3:00")) {
+                hora += 12; // Ejemplo para las 3 PM
+            }
+        } catch (Exception e) {
+            hora = 12; // Valor por defecto ante error
+        }
+
+        return LocalDateTime.of(fecha, LocalTime.of(hora, minuto));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cbPais_vivienda;
@@ -169,7 +289,6 @@ public class reservar extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser dcEntrada;
     private com.toedter.calendar.JDateChooser dcSalida;
     private javax.swing.JLabel jLabel73;
-    private javax.swing.JLabel jLabel74;
     private javax.swing.JLabel jLabel75;
     private javax.swing.JLabel jLabel76;
     private javax.swing.JLabel jLabel77;
@@ -181,10 +300,10 @@ public class reservar extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel83;
     private javax.swing.JLabel jLabel84;
     private javax.swing.JLabel jLabel85;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtDocumento;
     private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtLugar_reserva;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables

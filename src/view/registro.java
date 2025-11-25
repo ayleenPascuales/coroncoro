@@ -1301,9 +1301,10 @@ public class registro extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "El nombre de usuario '" + user + "' ya está en uso.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-
+            String id_cliente = nuevoUsuario.getId_usuario();
             // 3. CREAR Y GUARDAR CLIENTE (PERFIL)
             Cuenta_cliente nuevoCliente = new Cuenta_cliente(
+                    id_cliente,
                     nombre,
                     apellido,
                     documento,
@@ -1639,9 +1640,10 @@ public class registro extends javax.swing.JFrame {
 
             // 1. Crear Usuario
             Usuario nuevoUsuario = new Usuario(user, pass, "ANFITRION");
-
+            String id_usuario_anfitrion = nuevoUsuario.getId_usuario();
             // 2. Crear Perfil Anfitrión
             Cuenta_Anfitrion nuevoAnfitrion = new Cuenta_Anfitrion(
+                    id_usuario_anfitrion,
                     LocalDate.now(),//fecha inicio
                     true, // estado bloqueado o no
                     "0.0", //calificacion
