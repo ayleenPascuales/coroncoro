@@ -2,7 +2,8 @@ package Model;
 
 import java.time.LocalDate;
 
-public class Persona{
+public class Persona {
+    protected String id_usuario;
     private String nombre;
     private String apellido;
     private String documento;
@@ -27,6 +28,14 @@ public class Persona{
         this.fecha_nacimiento = fecha_nacimiento;
         this.idiomas = idiomas;
         this.ciudad_vivienda = ciudad_vivienda;
+    }
+    
+    public String getId_usuario() {
+        return id_usuario;
+    }
+
+    public void setId_usuario(String id_usuario) {
+        this.id_usuario = id_usuario;
     }
 
     public String getNombre() {
@@ -117,5 +126,4 @@ public class Persona{
         this.ciudad_vivienda = ciudad_vivienda;
     }
 
-    
 }

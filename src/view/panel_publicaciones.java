@@ -19,8 +19,7 @@ public class panel_publicaciones extends javax.swing.JPanel {
     public panel_publicaciones() {
         initComponents();
     }
-    
-    panel_publicaciones publicacion = new panel_publicaciones();
+   
     
     public void setTitulo(String titulo) {
         titulo_alojamiento.setText(titulo);
@@ -46,11 +45,11 @@ public class panel_publicaciones extends javax.swing.JPanel {
         direccion_alojamiento.setText(direccion);
     }
 
-    public void setImagen(String ruta) {
+   public void setImagen(String ruta) {
         ImageIcon icon = new ImageIcon(ruta);
-        Image img = icon.getImage().getScaledInstance(foto_alojamiento.getWidth(), foto_alojamiento.getHeight(), Image.SCALE_SMOOTH);
+        Image img = icon.getImage().getScaledInstance(130, 130, Image.SCALE_SMOOTH);
         foto_alojamiento.setIcon(new ImageIcon(img));
-    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.

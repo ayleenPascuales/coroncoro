@@ -1157,8 +1157,7 @@ public class registro extends javax.swing.JFrame {
                 this.setVisible(false);
             }
         } else if (T_selected.getText().equals("(ANFITRIÓN)")) {
-            if (registrarHuesped()) {
-                registrarAnfitrionCompleto();
+            if (registrarAnfitrionCompleto()) {
                 login volver = new login();
                 volver.setVisible(true);
                 this.setVisible(false);
@@ -1340,9 +1339,13 @@ public class registro extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "El nombre de usuario '" + user + "' ya está en uso.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-
+            
+            String idGenerado = nuevoUsuario.getId_usuario();
+            
+            
             // 3. CREAR Y GUARDAR CLIENTE (PERFIL)
             Cuenta_cliente nuevoCliente = new Cuenta_cliente(
+                    idGenerado,
                     nombre,
                     apellido,
                     documento,
@@ -1659,9 +1662,11 @@ public class registro extends javax.swing.JFrame {
 
             // 1. Crear Usuario
             Usuario nuevoUsuario = new Usuario(user, pass, "ANFITRION");
+            String idGenerado = nuevoUsuario.getId_usuario();
 
             // 2. Crear Perfil Anfitrión
             Cuenta_Anfitrion nuevoAnfitrion = new Cuenta_Anfitrion(
+                    idGenerado,
                     LocalDate.now(),//fecha inicio
                     true, // estado bloqueado o no
                     "0.0", //calificacion

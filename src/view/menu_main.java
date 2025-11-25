@@ -5,57 +5,104 @@
 package view;
 
 import Model.Alojamiento;
+import Model.Cuenta_Anfitrion;
+import Model.Cuenta_cliente;
+import Model.Reservas;
 import Model.dao.AlojamientoDAO;
 import Model.dao.AlojamientoDAOImpl;
+import Model.dao.AnfitrionDAOImpl;
+import Model.dao.ClienteDAOImpl;
+import Model.dao.ReservasDAOImpl;
 import java.awt.Dimension;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author aylee
  */
 public class menu_main extends javax.swing.JFrame {
-    
+
     private AlojamientoDAO dao;
+    private String idUsuarioLogueado;
 
     /**
      * Creates new form login_main
      */
-    public menu_main() {
+    public menu_main(String idUsuario) {
+        this.idUsuarioLogueado = idUsuario;
         initComponents();
         setLocationRelativeTo(null);
         dao = new AlojamientoDAOImpl(); // inicializa tu DAO
-        cargarPublicaciones(); 
+        cargarPublicaciones();
         panel_menu_extendido.setVisible(false);
-        panel_menu_recojido.setVisible(true);     
+        panel_menu_recojido.setVisible(true);
+        jScrollPane7.setVisible(false);
+        jTextArea1.setVisible(false);
+        jLabel19.setVisible(false);
+        jLabel14.setVisible(false);
     }
-    
-   public void animarPanel(JPanel panel, int widthInicial, int widthFinal) {
-    new Thread(() -> {
-        try {
-            if (widthInicial < widthFinal) {
-                // Expandir
-                for (int i = widthInicial; i <= widthFinal; i++) {
-                    Thread.sleep(2);
-                    panel.setSize(i, panel.getHeight());
+
+    public void animarPanel(JPanel panel, int widthInicial, int widthFinal) {
+        new Thread(() -> {
+            try {
+                if (widthInicial < widthFinal) {
+                    // Expandir
+                    for (int i = widthInicial; i <= widthFinal; i++) {
+                        Thread.sleep(2);
+                        panel.setSize(i, panel.getHeight());
+                    }
+                } else {
+                    // Contraer
+                    for (int i = widthInicial; i >= widthFinal; i--) {
+                        Thread.sleep(2);
+                        panel.setSize(i, panel.getHeight());
+                    }
                 }
-            } else {
-                // Contraer
-                for (int i = widthInicial; i >= widthFinal; i--) {
-                    Thread.sleep(2);
-                    panel.setSize(i, panel.getHeight());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void configurarLogicaTabla() {
+        // Habilitar que se puedan seleccionar filas (por si acaso estaba desactivado)
+        jTable2.setRowSelectionAllowed(true);
+        jTable2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        // Agregar el "oido" (Listener) para detectar clics
+        jTable2.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            @Override
+            public void valueChanged(javax.swing.event.ListSelectionEvent event) {
+                // El if evita errores de doble ejecución o cuando no hay selección
+                if (!event.getValueIsAdjusting() && jTable2.getSelectedRow() != -1) {
+
+                    // 1. Obtenemos la fila
+                    int fila = jTable2.getSelectedRow();
+
+                    // 2. Obtenemos el nombre (OJO: Verifica que la columna 1 sea el Lugar/Nombre)
+                    // Si en tu tabla el nombre está en la columna 0, cambia el 1 por 0.
+                    Object nombreObj = jTable2.getValueAt(fila, 1);
+
+                    if (nombreObj != null) {
+                        // 3. Actualizamos el Label informativo
+                        // Asumo que tienes un JLabel encima del TextArea, ej: lblTituloResena
+                        jTextArea1.setText("Reseñar a " + nombreObj.toString());
+
+                        // Si el panel de reseña ya está visible, esto da feedback instantáneo
+                    }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }).start();
+        });
     }
-   
+
     private void cargarPublicaciones() {
         panel_inicio.removeAll(); // limpia el panel
 
@@ -81,9 +128,94 @@ public class menu_main extends javax.swing.JFrame {
 
         panel_inicio.revalidate();
         panel_inicio.repaint();
+
+        String a = this.idUsuarioLogueado;
     }
-   
-   
+
+    private void cargarReservasDelUsuario() {
+        System.out.println("--- INICIANDO CARGA DE RESERVAS ---");
+        System.out.println("Usuario Logueado ID: " + this.idUsuarioLogueado);
+
+        DefaultTableModel modelo = (DefaultTableModel) jTable2.getModel();
+        modelo.setRowCount(0);
+
+        ClienteDAOImpl clienteDao = new ClienteDAOImpl();
+        AnfitrionDAOImpl anfitrionDao = new AnfitrionDAOImpl();
+        ReservasDAOImpl reservasDao = new ReservasDAOImpl();
+
+        String documentoEncontrado = null;
+
+        // 1. BUSCAR EN CLIENTES
+        List<Cuenta_cliente> listaClientes = clienteDao.cargarClientes();
+        System.out.println("Clientes cargados: " + (listaClientes != null ? listaClientes.size() : "NULL"));
+
+        if (listaClientes != null) {
+            for (Cuenta_cliente c : listaClientes) {
+                // Imprimir para verificar comparaciones
+                // System.out.println("Comparando con Cliente ID: " + c.getId_usuario()); 
+                if (c.getId_usuario() != null && c.getId_usuario().equals(this.idUsuarioLogueado)) {
+                    documentoEncontrado = c.getDocumento();
+                    System.out.println("¡ENCONTRADO EN CLIENTES! Documento: " + documentoEncontrado);
+                    break;
+                }
+            }
+        }
+
+        // 2. BUSCAR EN ANFITRIONES (Si no se halló)
+        if (documentoEncontrado == null) {
+            List<Cuenta_Anfitrion> listaAnfitriones = anfitrionDao.cargarAnfitriones();
+            System.out.println("Anfitriones cargados: " + (listaAnfitriones != null ? listaAnfitriones.size() : "NULL"));
+
+            if (listaAnfitriones != null) {
+                for (Cuenta_Anfitrion a : listaAnfitriones) {
+                    if (a.getId_usuario() != null && a.getId_usuario().equals(this.idUsuarioLogueado)) {
+                        documentoEncontrado = a.getDocumento();
+                        System.out.println("¡ENCONTRADO EN ANFITRIONES! Documento: " + documentoEncontrado);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (documentoEncontrado == null) {
+            System.out.println("ERROR: No se encontró documento para este ID de usuario.");
+            JOptionPane.showMessageDialog(this, "Error: No se encontró perfil asociado al usuario.");
+            return;
+        }
+
+        // 3. CARGAR RESERVAS
+        List<Reservas> listaReservas = reservasDao.cargarReservas();
+        System.out.println("Total Reservas en sistema: " + (listaReservas != null ? listaReservas.size() : "NULL"));
+
+        boolean tieneReservas = false;
+
+        if (listaReservas != null) {
+            for (Reservas r : listaReservas) {
+                // Verificar nulidad para evitar errores
+                System.out.println(r.getDocumento_cliente());
+                if (r.getDocumento_cliente() != null) {
+                    if (r.getDocumento_cliente().equals(documentoEncontrado)) {
+                        Object[] fila = {
+                            r.getNum_reserva(),
+                            r.getLugar_reserva(),
+                            r.getDia_entrada(),
+                            r.getDia_salida(),
+                            r.getTipo_reserva()
+                        };
+                        modelo.addRow(fila);
+                        tieneReservas = true;
+                    }
+                }
+            }
+        }
+
+        if (!tieneReservas) {
+            System.out.println("El usuario tiene documento " + documentoEncontrado + " pero NO tiene reservas coincidentes.");
+            JOptionPane.showMessageDialog(this, "No tienes reservas registradas.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            System.out.println("Reservas cargadas correctamente en la tabla.");
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -163,6 +295,21 @@ public class menu_main extends javax.swing.JFrame {
         panel_mis_publicaciones = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jPanel8 = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        jTable3 = new javax.swing.JTable();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         panel_reservas = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
@@ -455,6 +602,100 @@ public class menu_main extends javax.swing.JFrame {
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane8.setViewportView(jTable2);
+
+        jPanel8.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, -1));
+
+        jPanel9.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel10.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
+        jLabel10.setText("LISTADO DE RESERVAS");
+        jPanel9.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 19, 220, 30));
+
+        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane9.setViewportView(jTable3);
+
+        jPanel9.add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, -1));
+
+        jLabel13.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
+        jLabel13.setText("PERSONALIZAR RESERVA");
+        jPanel9.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 80, -1, 30));
+
+        jLabel14.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
+        jLabel14.setText("VOLVER");
+        jLabel14.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel14MouseClicked(evt);
+            }
+        });
+        jPanel9.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 420, 80, 30));
+
+        jLabel15.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
+        jLabel15.setText("ELIMINAR RESERVAS");
+        jPanel9.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 130, 220, 30));
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane7.setViewportView(jTextArea1);
+
+        jPanel9.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 220, 270, 190));
+
+        jLabel16.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
+        jLabel16.setText("RESEÑAR ALOJAMIENTOS");
+        jLabel16.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel16MouseClicked(evt);
+            }
+        });
+        jPanel9.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 180, 260, 30));
+
+        jLabel18.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
+        jLabel18.setText("RESEÑAR");
+        jLabel18.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel18MouseClicked(evt);
+            }
+        });
+        jPanel9.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 40, 100, 30));
+
+        jLabel19.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
+        jLabel19.setText("RESEÑAR");
+        jLabel19.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel19MouseClicked(evt);
+            }
+        });
+        jPanel9.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 420, 100, 30));
+
+        jPanel8.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        jLabel11.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
+        jLabel11.setText("LISTADO DE RESEÑAS");
+        jPanel8.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 19, 220, 30));
+
         jScrollPane4.setViewportView(jPanel8);
 
         panel_mis_publicaciones.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 840, 560));
@@ -529,18 +770,18 @@ public class menu_main extends javax.swing.JFrame {
 
     private void boton_menuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boton_menuMouseClicked
         if (panel_menu_extendido.isVisible()) {
-        
-        animarPanel(panel_menu_extendido, 220, 220);
 
-        panel_menu_extendido.setVisible(false);
-        panel_menu_recojido.setVisible(true);
+            animarPanel(panel_menu_extendido, 220, 220);
 
-    } else {
-        panel_menu_extendido.setVisible(true);
-        panel_menu_recojido.setVisible(false);
+            panel_menu_extendido.setVisible(false);
+            panel_menu_recojido.setVisible(true);
 
-        animarPanel(panel_menu_extendido, 70, 220);
-    }
+        } else {
+            panel_menu_extendido.setVisible(true);
+            panel_menu_recojido.setVisible(false);
+
+            animarPanel(panel_menu_extendido, 70, 220);
+        }
     }//GEN-LAST:event_boton_menuMouseClicked
 
     private void crear_publicacionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_crear_publicacionMouseClicked
@@ -560,8 +801,69 @@ public class menu_main extends javax.swing.JFrame {
 
     private void reservasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reservasMouseClicked
         // TODO add your handling code here:
-        jTabbedPane1.setSelectedIndex(3);
+        jTabbedPane1.setSelectedIndex(2);
+        cargarReservasDelUsuario();
     }//GEN-LAST:event_reservasMouseClicked
+
+    private void jLabel14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel14MouseClicked
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jLabel14MouseClicked
+
+    private void jLabel16MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel16MouseClicked
+        // TODO add your handling code here:
+        // --- 1. VALIDAR SI HAY ELEMENTOS EN LA TABLA ---
+        if (jTable2.getRowCount() == 0) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "No tienes reservas registradas para poder reseñar.",
+                    "Historial Vacío",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            return; // Detenemos la ejecución aquí, no muestra nada más
+        }
+
+        // --- 2. OCULTAR BOTONES Y MOSTRAR TEXT AREA ---
+        // Ocultamos las acciones que no queremos ver
+        jLabel13.setVisible(false);
+        jLabel15.setVisible(false);
+        // Ocultamos el mismo botón de reseñar para que no le den clic de nuevo (opcional)
+        // btnResenar.setVisible(false); 
+
+        // Mostramos el formulario de reseña
+        // Asegúrate que 'jScrollPaneResena' es el contenedor de tu JTextArea
+        jScrollPane7.setVisible(true);
+        jTextArea1.setVisible(true);          // Tu JTextArea
+        jLabel19.setVisible(true);   // Botón para guardar
+        jLabel18.setVisible(true);   // El título que cambia dinámicamente
+
+        // Limpiamos el texto por si había algo escrito antes
+        jTextArea1.setText("");
+
+        // --- 3. LÓGICA DE TEXTO INICIAL ---
+        // Verificamos si el usuario YA seleccionó una fila antes de dar clic al botón
+        int filaSeleccionada = jTable2.getSelectedRow();
+
+        if (filaSeleccionada != -1) {
+            // Si ya había seleccionado, actualizamos el título inmediatamente
+            Object nombre = jTable2.getValueAt(filaSeleccionada, 1);
+            jLabel18.setText("Reseñar a " + (nombre != null ? nombre.toString() : "Alojamiento"));
+            jTextArea1.requestFocus(); // Ponemos el foco para escribir
+        } else {
+            // Si no ha seleccionado nada, le indicamos que lo haga
+            jLabel18.setText("Selecciona una reserva de la tabla para reseñar...");
+        }
+
+        // Forzar repintado del panel (a veces necesario en Swing al ocultar/mostrar)
+        panel_reservas.revalidate();
+        panel_reservas.repaint();
+    }//GEN-LAST:event_jLabel16MouseClicked
+
+    private void jLabel18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel18MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel18MouseClicked
+
+    private void jLabel19MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel19MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel19MouseClicked
 
     /**
      * @param args the command line arguments
@@ -590,11 +892,16 @@ public class menu_main extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-
+        try {
+            // Puedes elegir Dark (Oscuro) o Light (Claro)
+            UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatIntelliJLaf());
+        } catch (UnsupportedLookAndFeelException ex) {
+            System.err.println("Failed to initialize LaF");
+        }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new menu_main().setVisible(true);
+                new menu_main("ID_PRUEBA_DESDE_MAIN").setVisible(true);
             }
         });
     }
@@ -619,8 +926,16 @@ public class menu_main extends javax.swing.JFrame {
     private javax.swing.JLabel crear_publicacion;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel27;
@@ -655,13 +970,20 @@ public class menu_main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTable3;
+    private javax.swing.JTextArea jTextArea1;
     private com.toedter.components.JSpinField jsBaños;
     private com.toedter.components.JSpinField jsCapacidad;
     private com.toedter.components.JSpinField jsHabitaciones;

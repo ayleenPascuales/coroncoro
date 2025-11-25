@@ -1,28 +1,2 @@
 [
-  {
-    "nombre": "ayleen",
-    "apellido": "pascuales",
-    "documento": "1142916682",
-    "edad": "18",
-    "telefono": "+573235240668",
-    "email": "ayleenpascuales@gmail.com",
-    "Barrio": "los cerezos",
-    "direccion": "los cerezos",
-    "fecha_nacimiento": "2007-01-10",
-    "idiomas": "español",
-    "ciudad_vivienda": "Cartagena de Indias"
-  },
-  {
-    "nombre": "Boris",
-    "apellido": "Jimenez",
-    "documento": "1007899602",
-    "edad": "25",
-    "telefono": "+573235240668",
-    "email": "ayleenpascuales@gmail.com",
-    "Barrio": "Villarosel",
-    "direccion": "Villarosel",
-    "fecha_nacimiento": "2000-05-14",
-    "idiomas": "español",
-    "ciudad_vivienda": "Cartagena de Indias"
-  }
 ]
