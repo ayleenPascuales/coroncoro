@@ -70,7 +70,7 @@ public class Lista_alojamiento {
     public Alojamiento buscarPorId(String id) {
     Nodo_alojamiento actual = cabeza;
     while (actual != null) {
-        if (actual.getDato().getId_Alojamiento().equals(id)) {
+        if (actual.getDato().getId_alojamiento().equals(id)) {
             return actual.getDato();
         }
         actual = actual.getSiguiente();
@@ -82,7 +82,7 @@ public boolean eliminar(String id) {
     Nodo_alojamiento actual = cabeza;
 
     while (actual != null) {
-        if (actual.getDato().getId_Alojamiento().equals(id)) {
+        if (actual.getDato().getId_alojamiento().equals(id)) {
 
             // caso: único elemento
             if (actual == cabeza && actual == cola) {
@@ -118,7 +118,7 @@ public boolean modificar(Alojamiento nuevo) {
     Nodo_alojamiento actual = cabeza;
 
     while (actual != null) {
-        if (actual.getDato().getId_Alojamiento().equals(nuevo.getId_Alojamiento())) {
+        if (actual.getDato().getId_alojamiento().equals(nuevo.getId_alojamiento())) {
             actual.setDato(nuevo);
             return true;
         }

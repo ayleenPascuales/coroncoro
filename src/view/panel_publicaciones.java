@@ -4,7 +4,9 @@
  */
 package view;
 
+import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 
 /**
@@ -18,9 +20,10 @@ public class panel_publicaciones extends javax.swing.JPanel {
      */
     public panel_publicaciones() {
         initComponents();
+        this.setPreferredSize(new Dimension(820, 230));
     }
+   
     
-    panel_publicaciones publicacion = new panel_publicaciones();
     
     public void setTitulo(String titulo) {
         titulo_alojamiento.setText(titulo);
@@ -31,7 +34,7 @@ public class panel_publicaciones extends javax.swing.JPanel {
     }
 
     public void setPais(String pais) {
-        barrio_alojamiento.setText(pais);
+        pais_alojamiento.setText(pais);
     }
 
     public void setCiudad(String ciudad) {
@@ -48,9 +51,20 @@ public class panel_publicaciones extends javax.swing.JPanel {
 
     public void setImagen(String ruta) {
         ImageIcon icon = new ImageIcon(ruta);
-        Image img = icon.getImage().getScaledInstance(foto_alojamiento.getWidth(), foto_alojamiento.getHeight(), Image.SCALE_SMOOTH);
+        Image img = icon.getImage().getScaledInstance(130, 130, Image.SCALE_SMOOTH);
         foto_alojamiento.setIcon(new ImageIcon(img));
     }
+    public void addFavoritoListener(MouseListener listener) {
+        bnfavorito.addMouseListener(listener);
+    }   
+    
+    public void setFavoritoIcono(boolean favorito) {
+    if (favorito) {
+        bnfavorito.setIcon(new ImageIcon(getClass().getResource("/img/favorito.png")));
+    } else {
+        bnfavorito.setIcon(new ImageIcon(getClass().getResource("/img/favorito_off.png")));
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,6 +84,13 @@ public class panel_publicaciones extends javax.swing.JPanel {
         precio_alojamiento = new javax.swing.JLabel();
         ciudad_alojamiento = new javax.swing.JLabel();
         pais_alojamiento = new javax.swing.JLabel();
+        jLabel71 = new javax.swing.JLabel();
+        bnfavorito = new javax.swing.JLabel();
+        jLabel73 = new javax.swing.JLabel();
+        jLabel74 = new javax.swing.JLabel();
+        jLabel75 = new javax.swing.JLabel();
+        txtMoneda = new javax.swing.JTextField();
+        jLabel76 = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -79,34 +100,70 @@ public class panel_publicaciones extends javax.swing.JPanel {
         panel_alojamientos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         direccion_alojamiento.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        direccion_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        panel_alojamientos.add(direccion_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 120, 400, 30));
+        direccion_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        panel_alojamientos.add(direccion_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 150, 400, 30));
 
         foto_alojamiento.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        foto_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        panel_alojamientos.add(foto_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 130, 130));
+        foto_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        panel_alojamientos.add(foto_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 130, 130));
 
         titulo_alojamiento.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        titulo_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        panel_alojamientos.add(titulo_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 650, 30));
+        titulo_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        panel_alojamientos.add(titulo_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 30, 650, 30));
 
         barrio_alojamiento.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        barrio_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        panel_alojamientos.add(barrio_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 120, 240, 30));
+        barrio_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        panel_alojamientos.add(barrio_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 150, 240, 30));
 
         precio_alojamiento.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        precio_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        panel_alojamientos.add(precio_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 200, 30));
+        precio_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        panel_alojamientos.add(precio_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 90, 150, 30));
 
         ciudad_alojamiento.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        ciudad_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        panel_alojamientos.add(ciudad_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 70, 210, 30));
+        ciudad_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        panel_alojamientos.add(ciudad_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 90, 210, 30));
 
         pais_alojamiento.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        pais_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        panel_alojamientos.add(pais_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 70, 220, 30));
+        pais_alojamiento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        panel_alojamientos.add(pais_alojamiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 90, 220, 30));
 
-        jPanel1.add(panel_alojamientos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 820, 180));
+        jLabel71.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel71.setText("Direccion:");
+        panel_alojamientos.add(jLabel71, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 130, 120, 20));
+
+        bnfavorito.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        bnfavorito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/favorito.png"))); // NOI18N
+        bnfavorito.setText("Marcar como favorito");
+        bnfavorito.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bnfavoritoMouseClicked(evt);
+            }
+        });
+        panel_alojamientos.add(bnfavorito, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 200, 30));
+
+        jLabel73.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel73.setText("Pais:");
+        panel_alojamientos.add(jLabel73, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 70, 120, 20));
+
+        jLabel74.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel74.setText("Ciudad:");
+        panel_alojamientos.add(jLabel74, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 70, 120, 20));
+
+        jLabel75.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel75.setText("Barrio:");
+        panel_alojamientos.add(jLabel75, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 130, 120, 20));
+
+        txtMoneda.setEditable(false);
+        txtMoneda.setBackground(new java.awt.Color(255, 255, 255));
+        txtMoneda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        txtMoneda.setText("USD");
+        panel_alojamientos.add(txtMoneda, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 90, 50, 30));
+
+        jLabel76.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel76.setText("Precio por noche:");
+        panel_alojamientos.add(jLabel76, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 120, 20));
+
+        jPanel1.add(panel_alojamientos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 820, 230));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -120,16 +177,29 @@ public class panel_publicaciones extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void bnfavoritoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bnfavoritoMouseClicked
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_bnfavoritoMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel barrio_alojamiento;
+    private javax.swing.JLabel bnfavorito;
     private javax.swing.JLabel ciudad_alojamiento;
     private javax.swing.JLabel direccion_alojamiento;
     private javax.swing.JLabel foto_alojamiento;
+    private javax.swing.JLabel jLabel71;
+    private javax.swing.JLabel jLabel73;
+    private javax.swing.JLabel jLabel74;
+    private javax.swing.JLabel jLabel75;
+    private javax.swing.JLabel jLabel76;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel pais_alojamiento;
     private javax.swing.JPanel panel_alojamientos;
     private javax.swing.JLabel precio_alojamiento;
     private javax.swing.JLabel titulo_alojamiento;
+    private javax.swing.JTextField txtMoneda;
     // End of variables declaration//GEN-END:variables
 }

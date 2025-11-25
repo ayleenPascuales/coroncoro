@@ -4,9 +4,11 @@
  */
 package view;
 
+import Model.Alojamiento;
 import java.awt.*;
-import java.util.ArrayList;
 import javax.swing.*;
+import java.util.List;
+
 
 
 /**
@@ -14,37 +16,84 @@ import javax.swing.*;
  * @author aylee
  */
 public class Detalles extends javax.swing.JPanel {
-
+    private JLabel fotoActual; // JLabel para mostrar la foto actual
+    private int indiceFoto = 0; // Índice de la foto que se está mostrando
+    private Timer timer; 
+    private Alojamiento alojamiento;
+     
     /**
      * Creates new form Detalles
      */
-    public Detalles() {
+    public Detalles(Alojamiento alojamiento) {
+        this.alojamiento = alojamiento;
         initComponents();
+        llenarCampos();
+        cargarFotos(alojamiento.getFotos());
+       
+        txtADescripcion_vivienda.setLineWrap(true);
+        txtADescripcion_vivienda.setWrapStyleWord(true);
+      
     }
     
-    public void cargarFotos(ArrayList<String> rutasFotos) {
-    panel_fotos.removeAll(); 
-
-    panel_fotos.setLayout(new BoxLayout(panel_fotos, BoxLayout.Y_AXIS));
-
-    for (String ruta : rutasFotos) {
-        ImageIcon img = new ImageIcon(ruta);
-        Image image = img.getImage().getScaledInstance(250, 180, Image.SCALE_SMOOTH);
-
-        JLabel foto = new JLabel(new ImageIcon(image));
-        foto.setPreferredSize(new Dimension(250, 180));
-        foto.setMaximumSize(new Dimension(250, 180));
-        foto.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Separación entre fotos (margen)
-        foto.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-
-        panel_fotos.add(foto);
+    private void llenarCampos(){
+        txtPais_vivienda.setText(alojamiento.getPais());
+        txtCiudad_vivienda.setText(alojamiento.getCiudad());
+        txtBarrio_vivienda.setText(alojamiento.getBarrio());
+        txtTipo_vivienda.setText(alojamiento.getTipo_vivienda());
+        txtDireccion_vivienda.setText(alojamiento.getDireccion());
+        txtCapacidad_vivienda.setText(alojamiento.getCapacidad_maxima());
+        txtBaños_vivienda.setText(alojamiento.getNum_baños());
+        txtHabitaciones_vivienda.setText(alojamiento.getNum_habitaciones());
+        txtPrecio_vivienda.setText(alojamiento.getPrecio_noche());
+        txtADescripcion_vivienda.setText(alojamiento.getDescripcion());
+        txtBalcon_vivienda.setText(alojamiento.isBalcon() ? "Sí" : "No");
+        txtParrilla_vivienda.setText(alojamiento.isParrilla() ? "Sí" : "No");
+        txtAgua_vivienda.setText(alojamiento.isAgua_caliente() ? "Sí" : "No");
+        txtMascotas_vivienda.setText(alojamiento.isMascotas() ? "Sí" : "No");
+        txtParques_vivienda.setText(alojamiento.isParques() ? "Sí" : "No");
+        txtConjunto_vivienda.setText(alojamiento.isConjunto_cerrado() ? "Sí" : "No");
+        txtMovilidad_vivienda.setText(alojamiento.isPersonas_poca_movilidad() ? "Sí" : "No");
+        txtVigilancia_vivienda.setText(alojamiento.isVigilancia() ? "Sí" : "No");
+        txtPiscina_vivienda.setText(alojamiento.isPiscina() ? "Sí" : "No");
+        
     }
+    
+    public void cargarFotos(List<String> fotos) {
+        // Detener timer anterior si existe
+        if (timer != null && timer.isRunning()) {
+            timer.stop();
+        }
+        indiceFoto = 0;
 
-    panel_fotos.revalidate();
-    panel_fotos.repaint();
-}
+        panel_fotos.removeAll();
+        panel_fotos.setLayout(new BorderLayout());
+
+        if (fotos == null || fotos.isEmpty()) return;
+
+        // Primera foto
+        ImageIcon img = new ImageIcon(fotos.get(0));
+        Image image = img.getImage().getScaledInstance(310, 190, Image.SCALE_SMOOTH);
+        fotoActual = new JLabel(new ImageIcon(image));
+        fotoActual.setHorizontalAlignment(JLabel.CENTER);
+        fotoActual.setVerticalAlignment(JLabel.CENTER);
+        panel_fotos.add(fotoActual, BorderLayout.CENTER);
+
+        // Timer para slideshow
+        timer = new Timer(5000, e -> {
+            indiceFoto++;
+            if (indiceFoto >= fotos.size()) {
+                indiceFoto = 0;
+            }
+            ImageIcon nuevaImg = new ImageIcon(fotos.get(indiceFoto));
+            Image nuevaImage = nuevaImg.getImage().getScaledInstance(310, 190, Image.SCALE_SMOOTH);
+            fotoActual.setIcon(new ImageIcon(nuevaImage));
+        });
+
+        timer.start();
+
+        panel_fotos.revalidate();
+        panel_fotos.repaint();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -108,15 +157,18 @@ public class Detalles extends javax.swing.JPanel {
         txtCapacidad_vivienda = new javax.swing.JTextField();
         txtPrecio_vivienda = new javax.swing.JTextField();
         txtVigilancia_vivienda = new javax.swing.JTextField();
+        jLabel52 = new javax.swing.JLabel();
+        Volver_tipo = new javax.swing.JLabel();
 
         txtDireccion_vivienda7.setEditable(false);
         txtDireccion_vivienda7.setBackground(new java.awt.Color(255, 255, 255));
         txtDireccion_vivienda7.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
 
+        jPanel1.setPreferredSize(new java.awt.Dimension(828, 558));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel14.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel14.setPreferredSize(new java.awt.Dimension(828, 775));
+        jPanel14.setPreferredSize(new java.awt.Dimension(888, 965));
         jPanel14.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
@@ -174,8 +226,10 @@ public class Detalles extends javax.swing.JPanel {
         jPanel14.add(jLabel34, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 90, 20));
 
         jLabel37.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel37.setText("¿Tiene piscina?");
-        jPanel14.add(jLabel37, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 770, 130, 20));
+        jLabel37.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/campana.png"))); // NOI18N
+        jLabel37.setText("RESERVAR");
+        jLabel37.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel14.add(jLabel37, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 890, 150, 40));
 
         jLabel39.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel39.setText("¿Tiene parrilla?");
@@ -340,6 +394,21 @@ public class Detalles extends javax.swing.JPanel {
         txtVigilancia_vivienda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
         jPanel14.add(txtVigilancia_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 810, 220, -1));
 
+        jLabel52.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel52.setText("¿Tiene piscina?");
+        jPanel14.add(jLabel52, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 770, 130, 20));
+
+        Volver_tipo.setFont(new java.awt.Font("Ebrima", 3, 13)); // NOI18N
+        Volver_tipo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/flecha-hacia-atras-peque.png"))); // NOI18N
+        Volver_tipo.setText("REGRESAR");
+        Volver_tipo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Volver_tipo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Volver_tipoMouseClicked(evt);
+            }
+        });
+        jPanel14.add(Volver_tipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 910, 100, 30));
+
         jScrollPane1.setViewportView(jPanel14);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 590));
@@ -356,8 +425,17 @@ public class Detalles extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void Volver_tipoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Volver_tipoMouseClicked
+        // TODO add your handling code here:
+       JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if(frame != null){
+        frame.dispose();
+    }
+    }//GEN-LAST:event_Volver_tipoMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Volver_tipo;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel21;
@@ -383,6 +461,7 @@ public class Detalles extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
+    private javax.swing.JLabel jLabel52;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel14;

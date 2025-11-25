@@ -1,10 +1,10 @@
 package Model;
 
 import java.util.List;
-import java.util.UUID;
 
 public class Alojamiento {
     private String id_alojamiento;
+    private String titulo_publicacion;
     private String pais;
     private String ciudad;
     private String barrio;
@@ -25,15 +25,15 @@ public class Alojamiento {
     private boolean personas_poca_movilidad;
     private boolean vigilancia;
     private boolean conjunto_cerrado;
-    private double precio_noche;
+    private String precio_noche;
 
-    public Alojamiento(String id_alojamiento, String pais, String ciudad, String barrio, String direccion, String descripcion, String capacidad_maxima, String num_habitaciones, String num_baños, String tipo_vivienda, List<String> fotos, boolean disponibilidad, boolean piscina, boolean parrilla, boolean mascotas, boolean parques, boolean balcon, boolean agua_caliente, boolean personas_poca_movilidad, boolean vigilancia, boolean conjunto_cerrado, double precio_noche) {
-        this.id_alojamiento = UUID.randomUUID().toString();
+    public Alojamiento(String id_alojamiento, String titulo_publicacion, String pais, String ciudad, String barrio, String direccion, String descripcion, String capacidad_maxima, String num_habitaciones, String num_baños, String tipo_vivienda, List<String> fotos, boolean disponibilidad, boolean piscina, boolean parrilla, boolean mascotas, boolean parques, boolean balcon, boolean agua_caliente, boolean personas_poca_movilidad, boolean vigilancia, boolean conjunto_cerrado, String precio_noche) {
+        this.id_alojamiento = id_alojamiento;
+        this.titulo_publicacion = titulo_publicacion;
         this.pais = pais;
         this.ciudad = ciudad;
         this.barrio = barrio;
         this.direccion = direccion;
-
         this.descripcion = descripcion;
         this.capacidad_maxima = capacidad_maxima;
         this.num_habitaciones = num_habitaciones;
@@ -53,12 +53,20 @@ public class Alojamiento {
         this.precio_noche = precio_noche;
     }
 
-    public String getId_Alojamiento() {
+    public String getId_alojamiento() {
         return id_alojamiento;
     }
 
-    public void setId_Alojamiento(String id_alojamiento) {
+    public void setId_alojamiento(String id_alojamiento) {
         this.id_alojamiento = id_alojamiento;
+    }
+
+    public String getTitulo_publicacion() {
+        return titulo_publicacion;
+    }
+
+    public void setTitulo_publicacion(String titulo_publicacion) {
+        this.titulo_publicacion = titulo_publicacion;
     }
 
     public String getPais() {
@@ -221,14 +229,13 @@ public class Alojamiento {
         this.conjunto_cerrado = conjunto_cerrado;
     }
 
-    public double getPrecio_noche() {
+    public String getPrecio_noche() {
         return precio_noche;
     }
 
-    public void setPrecio_noche(double precio_noche) {
+    public void setPrecio_noche(String precio_noche) {
         this.precio_noche = precio_noche;
     }
-    
-    
-        
+
+            
 }

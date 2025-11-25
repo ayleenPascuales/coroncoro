@@ -11,6 +11,8 @@ import Model.JsonUtil.JsonLocalTimeAdapter;
 import Model.JsonUtil.JsonUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -36,13 +38,14 @@ public class FavoritosDAOImpl implements FavoritosDAO {
     }
 
     private void cargarDesdeJson() {
-        List<Favoritos> datos = JsonUtil.leerJson(ARCHIVO_FAVORITOS, List.class);
-        if (datos != null) {
-            for (Favoritos f : datos) {
-                lista.agregar(f);
-            }
+    Type tipoLista = new TypeToken<List<Favoritos>>() {}.getType();
+    List<Favoritos> datos = JsonUtil.leerJson(ARCHIVO_FAVORITOS, tipoLista);
+    if (datos != null) {
+        for (Favoritos f : datos) {
+            lista.agregar(f);
         }
     }
+}
 
     private void guardarEnJson() {
         JsonUtil.guardarJson(lista.getListaParaJson(), ARCHIVO_FAVORITOS);

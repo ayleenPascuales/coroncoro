@@ -26,6 +26,7 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -76,11 +77,13 @@ public class registro extends javax.swing.JFrame {
         estilizarCampo(txtBarrio);
         estilizarCampo(txtUsuario);
         estilizarCampo(txtContraseña);
-        estilizarCampo(txtPrecio);
+        estilizarCampo(txtMoneda);
         estilizarCampo(txtBarrio_vivienda);
         estilizarCampo(txtDireccion_vivienda);
         estilizarCampo(txtTelefono);
         estilizarCampo(txtDireccion);
+        estilizarCampo(txtPrecio);
+        estilizarCampo(txtTitulo_vivienda);
 
         pintarImagenEnPanel(jPanel8, "C:src\\img\\Huespedes.png");
         pintarImagenEnPanel(jPanel9, "C:src\\img\\anfitrion.jpg");
@@ -246,8 +249,7 @@ public class registro extends javax.swing.JFrame {
         datos.put("Viviendas Turísticas", Arrays.asList(
                 "Cabaña", "Casa de playa", "Casa campestre", "Finca",
                 "Chalet", "Bungalow", "Carpa", "Glamping",
-                "Eco Lodge", "Hostal", "Hostel", "Hotel",
-                "Resort", "Casa rural", "Hacienda"
+                "Eco Lodge", "Resort", "Casa rural", "Hacienda"
         ));
 
         datos.put("Viviendas Especiales", Arrays.asList(
@@ -294,6 +296,7 @@ public class registro extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jDayChooser1 = new com.toedter.calendar.JDayChooser();
         jPanel1 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -416,24 +419,13 @@ public class registro extends javax.swing.JFrame {
         jLabel31 = new javax.swing.JLabel();
         cbTipo_vivienda = new javax.swing.JComboBox<>();
         jLabel32 = new javax.swing.JLabel();
-        txtPrecio = new javax.swing.JTextField();
+        txtMoneda = new javax.swing.JTextField();
         jLabel33 = new javax.swing.JLabel();
         cbPais_vivienda = new javax.swing.JComboBox<>();
         cbCiudad_vivienda = new javax.swing.JComboBox<>();
-        jLabel28 = new javax.swing.JLabel();
-        cbPais_vivienda1 = new javax.swing.JComboBox<>();
-        jLabel22 = new javax.swing.JLabel();
-        cbCiudad_vivienda1 = new javax.swing.JComboBox<>();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
-        jLabel52 = new javax.swing.JLabel();
-        jsCapacidad1 = new com.toedter.components.JSpinField();
-        jLabel53 = new javax.swing.JLabel();
-        jsHabitaciones1 = new com.toedter.components.JSpinField();
-        jLabel54 = new javax.swing.JLabel();
-        jsBaños1 = new com.toedter.components.JSpinField();
-        jLabel55 = new javax.swing.JLabel();
-        jLabel56 = new javax.swing.JLabel();
+        txtTitulo_vivienda = new javax.swing.JTextField();
+        jLabel80 = new javax.swing.JLabel();
+        txtPrecio = new javax.swing.JTextField();
         Volver_tipo = new javax.swing.JLabel();
         datosPersonales = new javax.swing.JLabel();
         datosVivienda = new javax.swing.JLabel();
@@ -927,15 +919,15 @@ public class registro extends javax.swing.JFrame {
 
         jLabel25.setFont(new java.awt.Font("Ebrima", 2, 11)); // NOI18N
         jLabel25.setText("(LLenar estos campos SOLO en caso de que vaya a alquilar una vivienda)");
-        jPanel3.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 40, 360, 20));
+        jPanel3.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 40, 360, 20));
 
         jLabel6.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel6.setText("Capacidad maxima:");
-        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, 180, 20));
+        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 240, 180, 20));
 
         jLabel12.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel12.setText("Ciudad donde esta ubicada");
-        jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 190, 20));
+        jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 190, 20));
 
         txtBarrio_vivienda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
         txtBarrio_vivienda.addActionListener(new java.awt.event.ActionListener() {
@@ -943,11 +935,11 @@ public class registro extends javax.swing.JFrame {
                 txtBarrio_viviendaActionPerformed(evt);
             }
         });
-        jPanel3.add(txtBarrio_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 180, -1));
+        jPanel3.add(txtBarrio_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 180, -1));
 
         jLabel17.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel17.setText("Barrio donde esta ubicada:");
-        jPanel3.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 190, 20));
+        jPanel3.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, 190, 20));
 
         txtDireccion_vivienda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
         txtDireccion_vivienda.addActionListener(new java.awt.event.ActionListener() {
@@ -955,30 +947,30 @@ public class registro extends javax.swing.JFrame {
                 txtDireccion_viviendaActionPerformed(evt);
             }
         });
-        jPanel3.add(txtDireccion_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, 180, -1));
+        jPanel3.add(txtDireccion_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 630, -1));
 
         jLabel21.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel21.setText("Direccion:");
-        jPanel3.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 180, 20));
+        jPanel3.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 180, 20));
 
         jLabel27.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel27.setText("Pais donde esta ubicada:");
-        jPanel3.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 180, 20));
-        jPanel3.add(jsCapacidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 140, 170, -1));
-        jPanel3.add(jsHabitaciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 220, 170, -1));
+        jPanel3.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 180, 20));
+        jPanel3.add(jsCapacidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 270, 170, -1));
+        jPanel3.add(jsHabitaciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 330, 170, -1));
 
         jLabel29.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel29.setText("Tipo de vivienda:");
-        jPanel3.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 350, 130, 20));
+        jPanel3.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 240, 130, 20));
 
         jLabel30.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel30.setText("numero de baños:");
-        jPanel3.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 270, 180, 20));
-        jPanel3.add(jsBaños, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 300, 170, 30));
+        jPanel3.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 370, 180, 20));
+        jPanel3.add(jsBaños, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 400, 170, -1));
 
         jLabel31.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel31.setText("numero de habitaciones:");
-        jPanel3.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 190, 180, 20));
+        jPanel3.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 300, 180, 20));
 
         cbTipo_vivienda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
         cbTipo_vivienda.addActionListener(new java.awt.event.ActionListener() {
@@ -986,65 +978,35 @@ public class registro extends javax.swing.JFrame {
                 cbTipo_viviendaActionPerformed(evt);
             }
         });
-        jPanel3.add(cbTipo_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 380, 200, -1));
+        jPanel3.add(cbTipo_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 270, 200, -1));
 
         jLabel32.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
         jLabel32.setText("Precio por noche:");
-        jPanel3.add(jLabel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 110, 190, 20));
+        jPanel3.add(jLabel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 300, 190, 20));
 
-        txtPrecio.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
-        jPanel3.add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 140, 180, -1));
+        txtMoneda.setEditable(false);
+        txtMoneda.setBackground(new java.awt.Color(255, 255, 255));
+        txtMoneda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        txtMoneda.setText("USD");
+        jPanel3.add(txtMoneda, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 330, 50, -1));
 
         jLabel33.setFont(new java.awt.Font("Ebrima", 3, 20)); // NOI18N
         jLabel33.setText("DATOS DE LA VIVIENDA");
-        jPanel3.add(jLabel33, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, 230, 20));
+        jPanel3.add(jLabel33, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 20, 230, 20));
 
-        jPanel3.add(cbPais_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 180, -1));
+        jPanel3.add(cbPais_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, 180, -1));
 
-        jPanel3.add(cbCiudad_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 180, -1));
+        jPanel3.add(cbCiudad_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 180, -1));
 
-        jLabel28.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel28.setText("Pais donde esta ubicada:");
-        jPanel3.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 180, 20));
+        txtTitulo_vivienda.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        jPanel3.add(txtTitulo_vivienda, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 630, -1));
 
-        jPanel3.add(cbPais_vivienda1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 180, -1));
+        jLabel80.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel80.setText("Titulo de la publicacion:");
+        jPanel3.add(jLabel80, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 180, 20));
 
-        jLabel22.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel22.setText("Ciudad donde esta ubicada");
-        jPanel3.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 190, 20));
-
-        jPanel3.add(cbCiudad_vivienda1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 180, -1));
-
-        jLabel23.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel23.setText("Barrio donde esta ubicada:");
-        jPanel3.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 190, 20));
-
-        jLabel26.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel26.setText("Direccion:");
-        jPanel3.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 180, 20));
-
-        jLabel52.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel52.setText("Capacidad maxima:");
-        jPanel3.add(jLabel52, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, 180, 20));
-        jPanel3.add(jsCapacidad1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 140, 170, -1));
-
-        jLabel53.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel53.setText("numero de habitaciones:");
-        jPanel3.add(jLabel53, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 190, 180, 20));
-        jPanel3.add(jsHabitaciones1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 220, 170, -1));
-
-        jLabel54.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel54.setText("numero de baños:");
-        jPanel3.add(jLabel54, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 270, 180, 20));
-        jPanel3.add(jsBaños1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 300, 170, 30));
-
-        jLabel55.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel55.setText("Tipo de vivienda:");
-        jPanel3.add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 350, 130, 20));
-
-        jLabel56.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel56.setText("Precio por noche:");
-        jPanel3.add(jLabel56, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 110, 190, 20));
+        txtPrecio.setFont(new java.awt.Font("Ebrima", 2, 14)); // NOI18N
+        jPanel3.add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 330, 150, -1));
 
         jTabbedPane1.addTab("tab2", jPanel3);
 
@@ -1157,8 +1119,7 @@ public class registro extends javax.swing.JFrame {
                 this.setVisible(false);
             }
         } else if (T_selected.getText().equals("(ANFITRIÓN)")) {
-            if (registrarHuesped()) {
-                registrarAnfitrionCompleto();
+            if (registrarAnfitrionCompleto()) {
                 login volver = new login();
                 volver.setVisible(true);
                 this.setVisible(false);
@@ -1284,9 +1245,9 @@ public class registro extends javax.swing.JFrame {
             return false;
         }
 
-        if (!direccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.-]+")) {
+        if (!direccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.,\\-/()]+")) {
             JOptionPane.showMessageDialog(this, "La dirección contiene caracteres no válidos.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
-            return false;
+        return false;
         }
 
         String passwordRegex = "^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$";
@@ -1496,9 +1457,9 @@ public class registro extends javax.swing.JFrame {
             return false;
         }
 
-        if (!direccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.-]+")) {
+        if (!direccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.,\\-/()]+")) {
             JOptionPane.showMessageDialog(this, "La dirección contiene caracteres no válidos.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
-            return false;
+        return false;
         }
 
         String passwordRegex = "^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$";
@@ -1525,6 +1486,7 @@ public class registro extends javax.swing.JFrame {
         String alojBarrio = txtBarrio_vivienda.getText().trim();
         String alojDireccion = txtDireccion_vivienda.getText().trim();
         String alojDescripcion = taDescripcion.getText().trim();
+        String titulo = txtTitulo_vivienda.getText().trim();
 
         // Características (Valores Numéricos de Spinners)
         int valCapacidad = (Integer) jsCapacidad.getValue();
@@ -1539,6 +1501,7 @@ public class registro extends javax.swing.JFrame {
         String tipoVivienda = ((String) cbTipo_vivienda.getSelectedItem());
 
         // Precio
+        String moneda = txtMoneda.getText().trim();
         double alojPrecio = 0;
         try {
             alojPrecio = Double.parseDouble(txtPrecio.getText());
@@ -1574,9 +1537,9 @@ public class registro extends javax.swing.JFrame {
             return false;
         }
 
-        if (!alojDireccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.-]+")) {
+        if (!alojDireccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.,\\-/()]+")) {
             JOptionPane.showMessageDialog(this, "La dirección contiene caracteres no válidos.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
-            return false;
+        return false;
         }
 
         //VALIDAR DESCRIPCION
@@ -1612,7 +1575,22 @@ public class registro extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "El precio máximo permitido es de $100,000 COP.", "Precio Excedido", JOptionPane.WARNING_MESSAGE);
             return false;
         }
+        
+        if (titulo == null || titulo.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El título no puede estar vacío.", "Título inválido", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
 
+        if (titulo.length() < 3 || titulo.length() > 90) {
+            JOptionPane.showMessageDialog(null,"El título debe tener entre 3 y 90 caracteres.", "Longitud inválida", JOptionPane.WARNING_MESSAGE);
+        return false;   
+        }
+
+        if (!titulo.matches("[A-Za-zÁÉÍÓÚáéíóúñÑ0-9 .,!?-]+")) {
+            JOptionPane.showMessageDialog(null, "El título contiene caracteres no permitidos.", "Caracteres inválidos", JOptionPane.WARNING_MESSAGE);
+        return false;
+        }
+        
         if (cbTipo_vivienda == null || cbTipo_vivienda.equals("Seleccione un tipo de vivienda")) {
             JOptionPane.showMessageDialog(this,
                     "Debe seleccionar un tipo de vivienda válido.",
@@ -1620,6 +1598,8 @@ public class registro extends javax.swing.JFrame {
                     JOptionPane.WARNING_MESSAGE);
             return false;
         }
+        DecimalFormat df = new DecimalFormat("#,###.##");
+        String precioCompleto = df.format(alojPrecio) + " " + moneda;
 
         // =================================================================================
         // 6. GUARDADO Y PERSISTENCIA
@@ -1680,7 +1660,7 @@ public class registro extends javax.swing.JFrame {
 
             // 3. Crear Alojamiento
             Alojamiento nuevoAlojamiento = new Alojamiento(
-                    documento, // ID Dueño
+                    documento, titulo, // ID Dueño
                     alojPais, alojCiudad, alojBarrio, alojDireccion, alojDescripcion,
                     capacidad, numHabitaciones, numBanos, tipoVivienda,
                     rutasMultiplesArchivos,
@@ -1688,7 +1668,7 @@ public class registro extends javax.swing.JFrame {
                     tienePiscina, tieneParrilla, tieneMascotas, tieneParques,
                     tieneBalcon, tieneAguaCaliente, tienePocaMovilidad,
                     tieneVigilancia, tieneConjunto,
-                    alojPrecio
+                    precioCompleto
             );
 
             // 4. Transacción de Guardado
@@ -1942,7 +1922,7 @@ public class registro extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel8MouseClicked
 
     private void jPanel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel9MouseClicked
-        // TODO add your handling code here:
+            // TODO add your handling code here:
         jTabbedPane1.setSelectedIndex(1);
 
         datosPersonales.setVisible(true);
@@ -1986,7 +1966,7 @@ public class registro extends javax.swing.JFrame {
         extrasVivienda.setVisible(false);
         Continuar.setVisible(false);
         Volver_tipo.setVisible(false);
-
+        
         txtDocumento.setText("");
         txtNombre.setText("");
         txtApellido.setText("");
@@ -2001,9 +1981,12 @@ public class registro extends javax.swing.JFrame {
         txtTelefono.setText("");
         txtUsuario.setText("");
         txtContraseña.setText("");
+        
+        txtTitulo_vivienda.setText("");
         taDescripcion.setText("");
         cbPais_vivienda.setSelectedIndex(0);
         cbCiudad_vivienda.setSelectedIndex(0);
+        cbTipo_vivienda.setSelectedItem(0);
         txtBarrio_vivienda.setText("");
         txtDireccion_vivienda.setText("");
         jsCapacidad.setValue(0);
@@ -2084,14 +2067,12 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbBalcon1;
     private javax.swing.JComboBox<String> cbCiudad;
     private javax.swing.JComboBox<String> cbCiudad_vivienda;
-    private javax.swing.JComboBox<String> cbCiudad_vivienda1;
     private javax.swing.JComboBox<String> cbConjunto;
     private javax.swing.JComboBox<String> cbIdioma;
     private javax.swing.JComboBox<String> cbMascotas;
     private javax.swing.JComboBox<String> cbMascotas1;
     private javax.swing.JComboBox<String> cbPais;
     private javax.swing.JComboBox<String> cbPais_vivienda;
-    private javax.swing.JComboBox<String> cbPais_vivienda1;
     private javax.swing.JComboBox<String> cbParques;
     private javax.swing.JComboBox<String> cbParques1;
     private javax.swing.JComboBox<String> cbParrilla;
@@ -2108,6 +2089,7 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JLabel datosVivienda;
     private javax.swing.JLabel extrasVivienda;
     private javax.swing.JLabel extrasVivienda2;
+    private com.toedter.calendar.JDayChooser jDayChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -2121,13 +2103,9 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
@@ -2152,11 +2130,6 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
-    private javax.swing.JLabel jLabel52;
-    private javax.swing.JLabel jLabel53;
-    private javax.swing.JLabel jLabel54;
-    private javax.swing.JLabel jLabel55;
-    private javax.swing.JLabel jLabel56;
     private javax.swing.JLabel jLabel57;
     private javax.swing.JLabel jLabel58;
     private javax.swing.JLabel jLabel59;
@@ -2183,6 +2156,7 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel78;
     private javax.swing.JLabel jLabel79;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel80;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -2198,12 +2172,9 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private com.toedter.calendar.JDateChooser jdNacimiento;
     private com.toedter.components.JSpinField jsBaños;
-    private com.toedter.components.JSpinField jsBaños1;
     private com.toedter.components.JSpinField jsCapacidad;
-    private com.toedter.components.JSpinField jsCapacidad1;
     private com.toedter.components.JSpinField jsEdad;
     private com.toedter.components.JSpinField jsHabitaciones;
-    private com.toedter.components.JSpinField jsHabitaciones1;
     private javax.swing.JLabel lbVista_Previa;
     private javax.swing.JLabel lbVista_Previa1;
     private javax.swing.JTextArea taDescripcion;
@@ -2216,9 +2187,11 @@ public class registro extends javax.swing.JFrame {
     private javax.swing.JTextField txtDireccion_vivienda;
     private javax.swing.JTextField txtDocumento;
     private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtMoneda;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecio;
     private javax.swing.JTextField txtTelefono;
+    private javax.swing.JTextField txtTitulo_vivienda;
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JPanel volver_alogin;
     // End of variables declaration//GEN-END:variables

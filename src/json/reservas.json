@@ -1,16 +1,3 @@
 [
-    {
-  "num_reserva": "RSV001",
-  "tipo_reserva": "Cabaña",
-  "lugar_reserva": "Isla Barú",
-  "nombre_cliente": "Ayleen",
-  "apellido_cliente": "Pascuales",
-  "documento_cliente": "1032456789",
-  "telefono_cliente": "3004567890",
-  "email_cliente": "ayleen@example.com",
-  "dia_entrada": "2025-12-20",
-  "dia_salida": "2025-12-25",
-  "hora_entrada": "14:00",
-  "hora_salida": "11:00"
-}
+ 
 ]
