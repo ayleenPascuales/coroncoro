@@ -6,7 +6,6 @@ import java.util.UUID;
 public class Reservas {
 
     private String num_reserva;
-    private String tipo_reserva;
     private String lugar_reserva;
     private String nombre_cliente;
     private String apellido_cliente;
@@ -19,11 +18,10 @@ public class Reservas {
     private LocalDateTime hora_salida;
 
 
-    public Reservas(String num_reserva, String tipo_reserva, String lugar_reserva, String nombre_cliente,
+    public Reservas(String num_reserva, String lugar_reserva, String nombre_cliente,
             String apellido_cliente, String documento_cliente, String telefono_cliente, String email_cliente,
             LocalDate dia_entrada, LocalDate dia_salida, LocalDateTime hora_entrada, LocalDateTime hora_salida) {
         this.num_reserva = UUID.randomUUID().toString();
-        this.tipo_reserva = tipo_reserva;
         this.lugar_reserva = lugar_reserva;
         this.nombre_cliente = nombre_cliente;
         this.apellido_cliente = apellido_cliente;
@@ -44,13 +42,6 @@ public class Reservas {
         this.num_reserva = num_reserva;
     }
 
-    public String getTipo_reserva() {
-        return tipo_reserva;
-    }
-
-    public void setTipo_reserva(String tipo_reserva) {
-        this.tipo_reserva = tipo_reserva;
-    }
 
     public String getLugar_reserva() {
         return lugar_reserva;

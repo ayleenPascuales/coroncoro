@@ -229,6 +229,11 @@ public class Detalles extends javax.swing.JPanel {
         jLabel37.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/campana.png"))); // NOI18N
         jLabel37.setText("RESERVAR");
         jLabel37.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jLabel37.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel37MouseClicked(evt);
+            }
+        });
         jPanel14.add(jLabel37, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 890, 150, 40));
 
         jLabel39.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
@@ -432,6 +437,17 @@ public class Detalles extends javax.swing.JPanel {
         frame.dispose();
     }
     }//GEN-LAST:event_Volver_tipoMouseClicked
+
+    private void jLabel37MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel37MouseClicked
+        // TODO add your handling code here:
+        reservar panelReservar = new reservar();
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this); // obtener el JFrame actual
+
+        frame.getContentPane().removeAll(); // quitar todo lo que haya
+        frame.getContentPane().add(panelReservar);
+        frame.revalidate();  // refresca el layout
+        frame.repaint(); 
+    }//GEN-LAST:event_jLabel37MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

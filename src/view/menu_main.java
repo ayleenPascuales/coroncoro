@@ -657,12 +657,6 @@ public class menu_main extends javax.swing.JFrame {
         favs = new javax.swing.JLabel();
         reservas = new javax.swing.JLabel();
         favs1 = new javax.swing.JLabel();
-        panel_menu_extendido = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         panel_cbandeja = new javax.swing.JPanel();
@@ -732,6 +726,12 @@ public class menu_main extends javax.swing.JFrame {
         panel_favoritos = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         panel_favoritos2 = new javax.swing.JPanel();
+        panel_menu_extendido = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -806,62 +806,6 @@ public class menu_main extends javax.swing.JFrame {
         panel_menu_recojido.add(favs1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 480, -1, 50));
 
         jPanel1.add(panel_menu_recojido, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 70, 550));
-
-        panel_menu_extendido.setBackground(new java.awt.Color(255, 255, 255));
-        panel_menu_extendido.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        panel_menu_extendido.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel2.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/boton-mas (2).png"))); // NOI18N
-        jLabel2.setText("CREAR PUBLICACION");
-        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel2MouseClicked(evt);
-            }
-        });
-        panel_menu_extendido.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 210, 60));
-
-        jLabel5.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/hogar (3).png"))); // NOI18N
-        jLabel5.setText("INICIO");
-        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel5MouseClicked(evt);
-            }
-        });
-        panel_menu_extendido.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 210, 50));
-
-        jLabel6.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/llave (1)_1.png"))); // NOI18N
-        jLabel6.setText("PUBLICACIONES");
-        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel6MouseClicked(evt);
-            }
-        });
-        panel_menu_extendido.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 210, 60));
-
-        jLabel3.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/corazon.png"))); // NOI18N
-        jLabel3.setText("FAVORITOS");
-        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel3MouseClicked(evt);
-            }
-        });
-        panel_menu_extendido.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 480, 210, 50));
-
-        jLabel8.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/calendario (1).png"))); // NOI18N
-        jLabel8.setText("RESERVAS");
-        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel8MouseClicked(evt);
-            }
-        });
-        panel_menu_extendido.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 360, 210, 50));
-
-        jPanel1.add(panel_menu_extendido, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 220, 550));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1139,6 +1083,62 @@ public class menu_main extends javax.swing.JFrame {
         jPanel2.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 840, 600));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 830, 590));
+
+        panel_menu_extendido.setBackground(new java.awt.Color(255, 255, 255));
+        panel_menu_extendido.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        panel_menu_extendido.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel2.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/boton-mas (2).png"))); // NOI18N
+        jLabel2.setText("CREAR PUBLICACION");
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
+        panel_menu_extendido.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 210, 60));
+
+        jLabel5.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/hogar (3).png"))); // NOI18N
+        jLabel5.setText("INICIO");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
+        panel_menu_extendido.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 210, 50));
+
+        jLabel6.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/llave (1)_1.png"))); // NOI18N
+        jLabel6.setText("PUBLICACIONES");
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
+        panel_menu_extendido.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 210, 60));
+
+        jLabel3.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/corazon.png"))); // NOI18N
+        jLabel3.setText("FAVORITOS");
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel3MouseClicked(evt);
+            }
+        });
+        panel_menu_extendido.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 480, 210, 50));
+
+        jLabel8.setFont(new java.awt.Font("Ebrima", 3, 14)); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/calendario (1).png"))); // NOI18N
+        jLabel8.setText("RESERVAS");
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel8MouseClicked(evt);
+            }
+        });
+        panel_menu_extendido.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 360, 210, 50));
+
+        jPanel1.add(panel_menu_extendido, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 220, 550));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
