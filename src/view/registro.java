@@ -1803,7 +1803,7 @@ public class registro extends javax.swing.JFrame {
             // Guardamos los archivos seleccionados en la variable global
             fotosSeleccionadas = fileChooser.getSelectedFiles();
 
-            rutasMultiplesArchivos.clear();
+            //rutasMultiplesArchivos.clear();
 
             for (int i = 0; i < fotosSeleccionadas.length; i++) {
                 File archivo = fotosSeleccionadas[i];

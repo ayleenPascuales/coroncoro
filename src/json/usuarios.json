@@ -6,9 +6,21 @@
     "tipoUsuario": "HUESPED"
   },
   {
-    "id_usuario": "12a749f0-0b6f-4a1c-866f-96c58459a35b",
+    "id_usuario": "f3b2c1d4-7a6e-4b8f-9c12-3456abcd7890",
+    "usuario": "admin1",
+    "contraseña": "admin123$",
+    "tipoUsuario": "ADMIN"
+  },
+  {
+    "id_usuario": "103a0a1a-3c81-4f64-b6bf-fb4d321f9059",
     "usuario": "ayleen1",
     "contraseña": "ayleen123$",
+    "tipoUsuario": "ANFITRION"
+  },
+  {
+    "id_usuario": "5d19f6c7-ca08-4ed1-8619-5a787acafd2a",
+    "usuario": "Ningun23",
+    "contraseña": "ninguna23$",
     "tipoUsuario": "ANFITRION"
   }
 ]

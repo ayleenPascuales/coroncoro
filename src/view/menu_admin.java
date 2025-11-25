@@ -139,7 +139,7 @@ public class menu_admin extends javax.swing.JFrame {
 
             // Contar cuántas reservas tiene este alojamiento
             long cantidadReservas = listaReservas.stream()
-                    .filter(r -> r.getLugar_reserva().equals(alojamiento.getId_alojamiento()))
+                    .filter(r -> r.getDocumento_cliente().equals(alojamiento.getId_alojamiento()))
                     .count();
 
             Object[] fila = {documento, nombre, apellido, cantidadReservas};

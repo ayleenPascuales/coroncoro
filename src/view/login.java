@@ -196,11 +196,13 @@ public class login extends javax.swing.JFrame {
             // --- CASO DE ÉXITO ---
             JOptionPane.showMessageDialog(this, "Bienvenido, " + usuarioLogueado.getUsuario());
 
-            // Abrir la ventana principal
-            menu_main menu = new menu_main(usuarioLogueado.getId_usuario());
-            menu.setVisible(true);
-
-            // Cerrar la ventana de login actual
+            if ("ADMIN".equals(usuarioLogueado.getTipoUsuario())) {
+                    menu_admin menu1 = new menu_admin(usuarioIngresado);
+                    menu1.setVisible(true);
+            } else {
+                menu_main menu = new menu_main(usuarioLogueado.getId_usuario());
+                menu.setVisible(true);
+            }
             this.dispose();
 
         } else {

@@ -127,4 +127,8 @@ public boolean modificar(Alojamiento nuevo) {
 
     return false;
 }
+
+    public Nodo_alojamiento getCabeza() {
+        return cabeza;
+    }
 }

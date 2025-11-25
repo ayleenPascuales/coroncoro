@@ -1,3 +1,14 @@
 [
- 
+  {
+    "num_reserva": "1270740a-d874-44c7-87a8-85fc147fb282",
+    "nombre_cliente": "libia",
+    "apellido_cliente": "rondon",
+    "documento_cliente": "42365233",
+    "telefono_cliente": "3103503965",
+    "email_cliente": "lirrova@gmail.com",
+    "dia_entrada": "2025-12-08",
+    "dia_salida": "2025-12-15",
+    "hora_entrada": "03:00:00",
+    "hora_salida": "12:00:00"
+  }
 ]

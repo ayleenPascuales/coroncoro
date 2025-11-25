@@ -90,4 +90,7 @@ public class AnfitrionDAOImpl implements AnfitrionDAO {
         if (mod) guardarEnJson();
         return mod;
     }
+    public Lista_anfitriones getLista() {
+    return lista;
+}
 }

@@ -123,4 +123,7 @@ public class Lista_anfitriones {
     public int getTamano() {
         return tamano;
     }
+    public Nodo_anfitrion getCabeza() {
+        return cabeza;
+    }
 }

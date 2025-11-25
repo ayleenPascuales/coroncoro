@@ -95,5 +95,8 @@ public class AlojamientoDAOImpl implements AlojamientoDAO {
     }
     return disponibles;
 }
+    public Lista_alojamiento getLista() {
+    return lista;
+}
 }
 

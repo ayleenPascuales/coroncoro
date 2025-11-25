@@ -115,4 +115,8 @@ public class Lista_clientes {
     public boolean estaVacia() {
         return cabeza == null;
     }
+    
+    public Nodo_cliente getCabeza() {
+        return cabeza;
+    }
 }

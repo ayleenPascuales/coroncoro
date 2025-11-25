@@ -1,19 +1,20 @@
 [
   {
-    "id_alojamiento": "1142916682",
-    "titulo_publicacion": "Vivienda cómoda y bien equipada",
+    "id_alojamiento": "1007899603",
+    "titulo_publicacion": "MAGALLANES RESORT",
     "pais": "Colombia",
-    "ciudad": "Cartagena de Indias",
-    "barrio": "bocagrande",
-    "direccion": "Torre 3 Piso 7 Apto 702 -Conjunto Altavista Calle 45 #19-22",
-    "descripcion": "Vivienda amplia con estilo moderno, perfecta para vivir con comodidad.",
-    "capacidad_maxima": "4",
-    "num_habitaciones": "3",
+    "ciudad": "Mompos",
+    "barrio": "san martin",
+    "direccion": "BARRIO ESPAÑA CALLE 13 #4-90",
+    "descripcion": "Suit de lujo frente al rio, con un balcon que da vista a la hermosa naturaleza",
+    "capacidad_maxima": "2",
+    "num_habitaciones": "2",
     "num_baños": "2",
-    "tipo_vivienda": "Apartamento",
+    "tipo_vivienda": "Villa",
     "fotos": [
-      "C:\\Users\\aylee\\Downloads\\burgerr.jpg",
-      "C:\\Users\\aylee\\Downloads\\cabaña.jpg"
+      "C:\\Users\\aylee\\Downloads\\2148010194.jpg",
+      "C:\\Users\\aylee\\Downloads\\zombie.jpg",
+      "C:\\Users\\aylee\\Downloads\\WhatsApp Image 2025-05-22 at 10.38.09 AM (2).jpeg"
     ],
     "disponibilidad": true,
     "piscina": true,
@@ -26,32 +27,5 @@
     "vigilancia": true,
     "conjunto_cerrado": true,
     "precio_noche": "100 USD"
-  },
-  {
-    "id_alojamiento": "12a749f0-0b6f-4a1c-866f-96c58459a35b",
-    "titulo_publicacion": "Apartamento moderno en zona tranquila",
-    "pais": "Colombia",
-    "ciudad": "Cartagena de Indias",
-    "barrio": "Crespo",
-    "direccion": "Torre 3 -Piso 7 -Apto 704 - Conjunto Altavista,-Calle 45 #19-22",
-    "descripcion": "Espacioso y luminoso apartamento ideal para parejas o profesionales. Cuenta con excelente ventilación, seguridad 24/7 y cercanía a supermercados, transporte y parques. Perfecto para vivir con comodidad y buena ubicación.",
-    "capacidad_maxima": "5",
-    "num_habitaciones": "4",
-    "num_baños": "2",
-    "tipo_vivienda": "Apartamento",
-    "fotos": [
-      "C:\\Users\\aylee\\Downloads\\electrico.jpg"
-    ],
-    "disponibilidad": true,
-    "piscina": true,
-    "parrilla": true,
-    "mascotas": true,
-    "parques": true,
-    "balcon": true,
-    "agua_caliente": true,
-    "personas_poca_movilidad": true,
-    "vigilancia": true,
-    "conjunto_cerrado": true,
-    "precio_noche": "150 USD"
   }
 ]

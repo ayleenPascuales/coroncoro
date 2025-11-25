@@ -93,4 +93,8 @@ public class ClienteDAOImpl implements ClienteDAO {
         }
         return mod;
     }
+    
+    public Lista_clientes getLista() {
+    return lista;
+    }
 }

@@ -156,14 +156,22 @@ public class menu_main extends javax.swing.JFrame {
         pub.addFavoritoListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                Favoritos fav = new Favoritos(
-                    idUsuarioLogueado,       // usuario logueado
-                    a.getId_alojamiento(),   // ID del alojamiento
-                    LocalDate.now()          // fecha actual
-                );
-
-                favoritosDAO.guardarFavorito(fav);
-                JOptionPane.showMessageDialog(null, "Agregado a favoritos ⭐");
+                if (estaFavorito) {
+                    // Si ya está favorito, lo eliminamos
+                    favoritosDAO.eliminarFavorito(idUsuarioLogueado, a.getId_alojamiento());
+                    pub.setFavoritoIcono(false); // actualizar icono visual
+                    JOptionPane.showMessageDialog(null, "Eliminado de favoritos ✖");
+                } else {
+                    // Si no está, lo agregamos
+                    Favoritos fav = new Favoritos(
+                        idUsuarioLogueado,
+                        a.getId_alojamiento(),
+                        LocalDate.now()
+                    );
+                    favoritosDAO.guardarFavorito(fav);
+                    pub.setFavoritoIcono(true); // actualizar icono visual
+                    JOptionPane.showMessageDialog(null, "Agregado a favoritos ⭐");
+                }
             }
         });
 
@@ -217,7 +225,30 @@ public class menu_main extends javax.swing.JFrame {
                 pub.setImagen(a.getFotos().get(0));
             }
             boolean estaFavorito = favoritosDAO.existeFavorito(idUsuarioLogueado, a.getId_alojamiento());
-            pub.setFavoritoIcono(estaFavorito);
+        pub.setFavoritoIcono(estaFavorito);
+
+        // Listener para agregar a favoritos
+        pub.addFavoritoListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (estaFavorito) {
+                    // Si ya está favorito, lo eliminamos
+                    favoritosDAO.eliminarFavorito(idUsuarioLogueado, a.getId_alojamiento());
+                    pub.setFavoritoIcono(false); // actualizar icono visual
+                    JOptionPane.showMessageDialog(null, "Eliminado de favoritos ✖");
+                } else {
+                    // Si no está, lo agregamos
+                    Favoritos fav = new Favoritos(
+                        idUsuarioLogueado,
+                        a.getId_alojamiento(),
+                        LocalDate.now()
+                    );
+                    favoritosDAO.guardarFavorito(fav);
+                    pub.setFavoritoIcono(true); // actualizar icono visual
+                    JOptionPane.showMessageDialog(null, "Agregado a favoritos ⭐");
+                }
+            }
+        });
 
             publicaciones_propias.add(pub);
             publicaciones_propias.add(Box.createVerticalStrut(10));
@@ -270,6 +301,31 @@ public class menu_main extends javax.swing.JFrame {
         if (!a.getFotos().isEmpty()) {
             pub.setImagen(a.getFotos().get(0));
         }
+        boolean estaFavorito = favoritosDAO.existeFavorito(idUsuarioLogueado, a.getId_alojamiento());
+        pub.setFavoritoIcono(estaFavorito);
+
+        // Listener para agregar a favoritos
+        pub.addFavoritoListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (estaFavorito) {
+                    // Si ya está favorito, lo eliminamos
+                    favoritosDAO.eliminarFavorito(idUsuarioLogueado, a.getId_alojamiento());
+                    pub.setFavoritoIcono(false); // actualizar icono visual
+                    JOptionPane.showMessageDialog(null, "Eliminado de favoritos ✖");
+                } else {
+                    // Si no está, lo agregamos
+                    Favoritos fav = new Favoritos(
+                        idUsuarioLogueado,
+                        a.getId_alojamiento(),
+                        LocalDate.now()
+                    );
+                    favoritosDAO.guardarFavorito(fav);
+                    pub.setFavoritoIcono(true); // actualizar icono visual
+                    JOptionPane.showMessageDialog(null, "Agregado a favoritos ⭐");
+                }
+            }
+        });
         pub.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -523,11 +579,19 @@ public class menu_main extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "La descripción no puede estar vacía.", "Error", JOptionPane.ERROR_MESSAGE);
             return ;
         }
-        if (alojDescripcion.length() < 20 && alojDescripcion.length() > 500) {
-            JOptionPane.showMessageDialog(this, "La descripción debe tener como minimo 20 caracteres y como maximo 500 caracteres", "Error en la descripción", JOptionPane.WARNING_MESSAGE);
-            return ;
+        String nuevaDireccion = alojDireccion.trim();
+        
+        if (!nuevaDireccion.matches("[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\\s#.,\\-/()]+")) {
+            JOptionPane.showMessageDialog(this, "La dirección contiene caracteres no válidos.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
+        return ;
         }
+        dao = new AlojamientoDAOImpl();
+        boolean existe = dao.cargarAlojamientos().stream().anyMatch(a -> a.getDireccion().equalsIgnoreCase(nuevaDireccion));
 
+        if (existe) {
+            JOptionPane.showMessageDialog(this, "La dirección ya está registrada.", "Error en Dirección", JOptionPane.WARNING_MESSAGE);
+        return ;
+        }       
         // Cantidades Positivas (Capacidad, Habitaciones, Baños)
         if (valCapacidad <= 0) {
             JOptionPane.showMessageDialog(this, "La capacidad máxima debe ser al menos 1 persona.", "Error en Capacidad", JOptionPane.WARNING_MESSAGE);
@@ -646,6 +710,7 @@ public class menu_main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jPanel1 = new javax.swing.JPanel();
         menu = new javax.swing.JPanel();
         boton_menu = new javax.swing.JLabel();
@@ -750,7 +815,7 @@ public class menu_main extends javax.swing.JFrame {
         });
         menu.add(boton_menu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 60, 40));
 
-        jPanel1.add(menu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 70, 40));
+        jPanel1.add(menu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 20));
 
         panel_menu_recojido.setBackground(new java.awt.Color(255, 255, 255));
         panel_menu_recojido.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -1020,7 +1085,7 @@ public class menu_main extends javax.swing.JFrame {
 
         guardar_publicacion.setFont(new java.awt.Font("Ebrima", 3, 17)); // NOI18N
         guardar_publicacion.setText("PUBLICAR");
-        guardar_publicacion.setBorder(null);
+        guardar_publicacion.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         guardar_publicacion.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 guardar_publicacionMouseClicked(evt);
@@ -1196,6 +1261,9 @@ public class menu_main extends javax.swing.JFrame {
     private void guardar_publicacionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guardar_publicacionMouseClicked
         // TODO add your handling code here:
         crear_publicacion();
+        limpiarCampos();
+        cargarPublicaciones();
+        cargarPublicaciones_propias();
     }//GEN-LAST:event_guardar_publicacionMouseClicked
 
     private void FotosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FotosMouseClicked
@@ -1215,7 +1283,7 @@ public class menu_main extends javax.swing.JFrame {
             // Guardamos los archivos seleccionados en la variable global
             fotosSeleccionadas = fileChooser.getSelectedFiles();
 
-            rutasMultiplesArchivos.clear();
+            //rutasMultiplesArchivos.clear();
 
             for (int i = 0; i < fotosSeleccionadas.length; i++) {
                 File archivo = fotosSeleccionadas[i];
@@ -1339,6 +1407,7 @@ public class menu_main extends javax.swing.JFrame {
     private javax.swing.JLabel favs;
     private javax.swing.JLabel favs1;
     private javax.swing.JButton guardar_publicacion;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel17;

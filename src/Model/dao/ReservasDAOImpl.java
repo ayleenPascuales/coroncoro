@@ -6,6 +6,7 @@ package Model.dao;
 
 import Estructuras.Lista_reservas;
 import Model.JsonUtil.JsonLocalDateApadter;
+import Model.JsonUtil.JsonLocalDateTimeAdapter;
 import Model.JsonUtil.JsonLocalTimeAdapter;
 import Model.JsonUtil.JsonUtil;
 import Model.Reservas;
@@ -40,6 +41,7 @@ public class ReservasDAOImpl implements ReservasDAO {
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new JsonLocalDateApadter())
                 .registerTypeAdapter(LocalTime.class, new JsonLocalTimeAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new JsonLocalDateTimeAdapter())
                 .setPrettyPrinting()
                 .create();
 
